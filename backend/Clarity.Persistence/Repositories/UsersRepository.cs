@@ -1,0 +1,94 @@
+﻿using Clarity.Core.Abstractions;
+using Clarity.Core.Models;
+using Clarity.Persistence.Entitites;
+using Microsoft.EntityFrameworkCore;
+
+namespace Clarity.Persistence.Repositories;
+
+public class UsersRepository : IUsersRepository
+{
+    private readonly ClarityDbContext _context;
+
+    public UsersRepository(ClarityDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<Result> Add(User user, CancellationToken cancellationToken = default)
+    {
+        if (user.Id == Guid.Empty)
+            return Result.Failure("User id cannot be empty");
+        
+        var existingUser = await _context.Users
+            .AnyAsync(u => u.Id == user.Id, cancellationToken);
+        
+        if (existingUser)
+            return Result.Failure("User already exists");
+
+        var userEntity = new UserEntity
+        {
+            Id = user.Id,
+            Username = user.Username,
+            Email = user.Email,
+            PasswordHash = user.PasswordHash,
+        };
+        
+        try
+        {
+            await _context.Users.AddAsync(userEntity, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result.Failure($"Failed to create user: " +
+                                        $"{ex.InnerException.Message ?? ex.Message}");
+        }
+    }
+
+    public async Task<Result<User>> GetById(Guid id, CancellationToken cancellationToken = default)
+    {
+        if (id == Guid.Empty)
+            return Result<User>.Failure("User email cannot be empty");
+
+        var userEntity = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
+
+        if (userEntity == null)
+            return Result<User>.Failure("User not found");
+
+        var result = User.Create(userEntity.Id, 
+            userEntity.Username, 
+            userEntity.Email, 
+            userEntity.PasswordHash);
+
+        if (!result.IsSuccess)
+            return Result<User>.Failure(result.Errors);
+
+        return Result<User>.Success(result.Value);
+    }
+
+    public async Task<Result<User>> GetByEmail(string email, CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrEmpty(email))
+            return Result<User>.Failure("User email cannot be empty");
+
+        var userEntity = await _context.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+
+        if (userEntity == null)
+            return Result<User>.Failure("User not found");
+
+        var result = User.Create(userEntity.Id, 
+            userEntity.Username, 
+            userEntity.Email, 
+            userEntity.PasswordHash);
+
+        if (!result.IsSuccess)
+            return Result<User>.Failure(result.Errors);
+
+        return Result<User>.Success(result.Value);
+    }
+}
