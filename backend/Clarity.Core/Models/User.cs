@@ -7,16 +7,16 @@ public class User
     public const int MIN_USERNAME_LENGTH = 5;
     public const int MAX_USERNAME_LENGTH = 16;
     
-    private User(Guid id, string userName, string passwordHash, string email)
+    private User(Guid id, string username, string passwordHash, string email)
     {
         Id = id;
-        UserName = userName;
+        Username = username;
         PasswordHash = passwordHash;
         Email = email;
     }
     
     public Guid Id { get; }
-    public string UserName { get; }
+    public string Username { get; }
     public string PasswordHash { get; }
     public string Email { get; }
 
