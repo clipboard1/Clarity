@@ -22,26 +22,26 @@ public class User
 
     public static Result<User> Create(Guid id, string userName, string email, string passwordHash)
     {
-        var errors = new List<string>();
+        var errors = new Dictionary<string, string[]>();
         Regex mailRegex = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
         
         if (string.IsNullOrWhiteSpace(userName) || userName.Length < MIN_USERNAME_LENGTH)
-            errors.Add($"Username must be at least {MIN_USERNAME_LENGTH} characters.");
+            errors.Add("Username", [$"Username must be at least {MIN_USERNAME_LENGTH} characters."]);
         else if (userName.Length > MAX_USERNAME_LENGTH)
-            errors.Add($"Username must be less than {MAX_USERNAME_LENGTH} characters.");
+            errors.Add("Username", [$"Username must be less than {MAX_USERNAME_LENGTH} characters."]);
         else if (!userName.All(c => char.IsLetterOrDigit(c) || c == '_'))
-            errors.Add("Username can only contain letters, digits, or underscores.");
+            errors.Add("Username", ["Username can only contain letters, digits, or underscores."]);
         if (string.IsNullOrWhiteSpace(email))
-            errors.Add($"Email cannot be empty.");
+            errors.Add("Email", [$"Email cannot be empty."]);
         
         if (!mailRegex.IsMatch(email))
-            errors.Add($"Email address is not valid.");
+            errors.Add("Email", [$"Email address is not valid."]);
         
         if (string.IsNullOrWhiteSpace(passwordHash))
-            errors.Add($"Password cannot be empty.");
+            errors.Add("Password", [$"Password cannot be empty."]);
         
         if (errors.Any())
-            return Result<User>.Failure(errors.ToArray());
+            return Result<User>.Failure(errors);
         
         var user = new User(id, userName, passwordHash, email);
         

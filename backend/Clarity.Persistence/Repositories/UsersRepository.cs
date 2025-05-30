@@ -17,13 +17,13 @@ public class UsersRepository : IUsersRepository
     public async Task<Result> Add(User user, CancellationToken cancellationToken = default)
     {
         if (user.Id == Guid.Empty)
-            return Result.Failure("User id cannot be empty");
+            return Result.Failure(Result.ToDict("UserId", "User id cannot be empty"));
         
         var existingUser = await _context.Users
             .AnyAsync(u => u.Id == user.Id, cancellationToken);
         
         if (existingUser)
-            return Result.Failure("User already exists");
+            return Result.Failure(Result.ToDict("User","User already exists"));
 
         var userEntity = new UserEntity
         {
@@ -41,22 +41,22 @@ public class UsersRepository : IUsersRepository
         }
         catch (DbUpdateException ex)
         {
-            return Result.Failure($"Failed to create user: " +
-                                        $"{ex.InnerException.Message ?? ex.Message}");
+            return Result.Failure(Result.ToDict("General",$"Failed to create user: " +
+                                                         $"{ex.InnerException.Message ?? ex.Message}"));
         }
     }
 
     public async Task<Result<User>> GetById(Guid id, CancellationToken cancellationToken = default)
     {
         if (id == Guid.Empty)
-            return Result<User>.Failure("User email cannot be empty");
+            return Result<User>.Failure(Result.ToDict("UserId","User id cannot be empty"));
 
         var userEntity = await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Id == id, cancellationToken);
 
         if (userEntity == null)
-            return Result<User>.Failure("User not found");
+            return Result<User>.Failure(Result.ToDict("User","User not found"));
 
         var result = User.Create(userEntity.Id, 
             userEntity.Username, 
@@ -72,14 +72,14 @@ public class UsersRepository : IUsersRepository
     public async Task<Result<User>> GetByEmail(string email, CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(email))
-            return Result<User>.Failure("User email cannot be empty");
+            return Result<User>.Failure(Result.ToDict("Email","User email cannot be empty"));
 
         var userEntity = await _context.Users
             .AsNoTracking()
             .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
 
         if (userEntity == null)
-            return Result<User>.Failure("User not found");
+            return Result<User>.Failure(Result.ToDict("User","User not found"));
 
         var result = User.Create(userEntity.Id, 
             userEntity.Username, 
