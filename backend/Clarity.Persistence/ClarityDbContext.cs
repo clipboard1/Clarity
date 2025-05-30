@@ -7,6 +7,7 @@ namespace Clarity.Persistence;
 public class ClarityDbContext(DbContextOptions<ClarityDbContext> options) : DbContext(options)
 {
     public DbSet<UserEntity> Users { get; set; }
+    public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
