@@ -1,5 +1,7 @@
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Clarity.Core.Abstractions;
+using Clarity.Infrastructure.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,6 +14,10 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
 {
     options.UseNpgsql(connectionString);
 });
+
+builder.Services.AddControllers();
+builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
+builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
 
 var app = builder.Build();
 
