@@ -1,5 +1,6 @@
 ﻿using Clarity.Core.Abstractions;
 using Clarity.Core.Models;
+using Clarity.Persistence.Abstractions;
 using Clarity.Persistence.Entitites;
 using Microsoft.EntityFrameworkCore;
 
@@ -90,5 +91,66 @@ public class UsersRepository : IUsersRepository
             return Result<User>.Failure(result.Errors);
 
         return Result<User>.Success(result.Value);
+    }
+
+    public async Task<Result> SaveRefreshToken(Guid userId, string token, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var refreshToken = new RefreshTokenEntity
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                Token = token,
+                ExpiresOnUtc = DateTime.UtcNow.AddDays(7),
+            };
+    
+            await _context.RefreshTokens.AddAsync(refreshToken, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
+
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result.Failure(Result.ToDict("General", $"Failed to save token: " +
+                                  $"{ex.InnerException.Message ?? ex.Message}"));
+        }
+    }
+
+    public async Task<Result<RefreshTokenEntity>> GetRefreshToken(string token, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var refreshToken = await
+                _context.RefreshTokens
+                    .Include(r => r.User)
+                    .FirstOrDefaultAsync(r => r.Token == token,
+                        cancellationToken);
+        
+            if (refreshToken is null || refreshToken.ExpiresOnUtc < DateTime.UtcNow)
+                return Result<RefreshTokenEntity>.Failure(Result.ToDict("RefreshToken", "Invalid refresh token"));
+        
+            return Result<RefreshTokenEntity>.Success(refreshToken);
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to create token: " +
+                                                                    $"{ex.InnerException.Message ?? ex.Message}"));
+        }
+    }
+
+    public async Task<Result> UpdateRefreshToken(RefreshTokenEntity refreshToken, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            _context.Update(refreshToken);
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to create token: " + 
+                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+        }
     }
 }
