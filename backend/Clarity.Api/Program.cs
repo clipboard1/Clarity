@@ -10,8 +10,8 @@ using Clarity.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Configuration.AddEnvironmentVariables();
+builder.Services.AddSwaggerGen();
 
 string? connectionString = builder.Configuration.GetConnectionString(nameof(ClarityDbContext));
 
@@ -38,8 +38,10 @@ using (var scope = app.Services.CreateAsyncScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
