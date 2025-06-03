@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Clarity.Core\Clarity.Core.csproj" />
+      <ProjectReference Include="..\Clarity.Persistence\Clarity.Persistence.csproj" />
+    </ItemGroup>
+
 </Project>
