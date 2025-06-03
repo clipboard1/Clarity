@@ -14,6 +14,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Clarity.Application\Clarity.Application.csproj" />
       <ProjectReference Include="..\Clarity.Infrastructure\Clarity.Infrastructure.csproj" />
       <ProjectReference Include="..\Clarity.Persistence\Clarity.Persistence.csproj" />
     </ItemGroup>
