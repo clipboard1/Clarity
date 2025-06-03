@@ -1,7 +1,12 @@
+using Clarity.Application;
+using Clarity.Application.Abstractions;
+using Clarity.Application.Users.Register;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Clarity.Core.Abstractions;
 using Clarity.Infrastructure.Authentication;
+using Clarity.Persistence.Abstractions;
+using Clarity.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +23,10 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
 builder.Services.AddControllers();
 builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
 builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
+builder.Services.AddScoped<ICommandHandler<RegisterCommand>, RegisterCommandHandler>();
+builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
 var app = builder.Build();
 
