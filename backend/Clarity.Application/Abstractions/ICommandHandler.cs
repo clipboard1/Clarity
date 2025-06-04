@@ -2,13 +2,13 @@
 
 namespace Clarity.Application.Abstractions;
 
-public interface ICommandHandler<in TCommand>
+public interface ICommandHandler<TCommand>
     where TCommand : ICommand
 {
     Task<Result> Handle(TCommand command);
 }
 
-public interface ICommandHandler<in TCommand, TResponse>
+public interface ICommandHandler<TCommand, TResponse>
     where TCommand : ICommand<TResponse>
 {
     Task<Result<TResponse>> Handle(TCommand command);

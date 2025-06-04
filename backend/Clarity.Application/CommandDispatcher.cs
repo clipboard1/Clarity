@@ -13,7 +13,8 @@ public class CommandDispatcher : ICommandDispatcher
         _serviceProvider = serviceProvider;
     }
     
-    public async Task<Result> DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand
+    public async Task<Result> DispatchAsync<TCommand>(TCommand command) 
+        where TCommand : ICommand
     {
         var handler = _serviceProvider.GetService<ICommandHandler<TCommand>>();
         if (handler == null)
@@ -21,18 +22,9 @@ public class CommandDispatcher : ICommandDispatcher
 
         return await handler.Handle(command);
     }
-}
-
-public class CommandDispatcher<TResponse> : ICommandDispatcher<TResponse>
-{
-    private readonly IServiceProvider _serviceProvider;
     
-    public CommandDispatcher(IServiceProvider serviceProvider)
-    {
-        _serviceProvider = serviceProvider;
-    }
-    
-    public async Task<Result<TResponse>> DispatchAsync<TCommand>(TCommand command) where TCommand : ICommand<TResponse>
+    public async Task<Result<TResponse>> DispatchAsync<TCommand, TResponse>(TCommand command)
+        where TCommand : ICommand<TResponse>
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
         dynamic handler = _serviceProvider.GetService(handlerType);
