@@ -19,7 +19,9 @@ public static class AuthExtension
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
+                    ValidIssuer = jwtOptions.Value.Issuer,
                     ValidateAudience = true,
+                    ValidAudience = jwtOptions.Value.Audience,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(
