@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Clarity.Api.Middlewares;
 using Clarity.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
@@ -26,4 +27,7 @@ public static class AuthExtension
                 };
             });
     }
+    
+    public static IApplicationBuilder UseSecureJwt(this IApplicationBuilder builder) => 
+        builder.UseMiddleware<SecureJwtMiddleware>();
 }

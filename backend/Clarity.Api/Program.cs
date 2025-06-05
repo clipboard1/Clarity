@@ -69,6 +69,7 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 
 app.UseHttpsRedirection();
+app.UseSecureJwt();
 app.UseAuthentication();
 app.UseAuthorization();
 
