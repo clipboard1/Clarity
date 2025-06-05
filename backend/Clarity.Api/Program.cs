@@ -1,9 +1,14 @@
 using Clarity.Application;
 using Clarity.Application.Abstractions;
+using Clarity.Application.LogoutAllDevices;
+using Clarity.Application.Users.Login;
+using Clarity.Application.Users.LoginByRefreshToken;
+using Clarity.Application.Users.Logout;
 using Clarity.Application.Users.Register;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Clarity.Core.Abstractions;
+using Clarity.Core.Dto;
 using Clarity.Infrastructure.Authentication;
 using Clarity.Persistence.Abstractions;
 using Clarity.Persistence.Repositories;
@@ -28,6 +33,10 @@ builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IUsersRepository, UsersRepository>();
 
 builder.Services.AddScoped<ICommandHandler<RegisterCommand>, RegisterCommandHandler>();
+builder.Services.AddScoped<ICommandHandler<LoginCommand, AuthTokens>, LoginCommandHandler>();
+builder.Services.AddScoped<ICommandHandler<LogoutCommand>, LogoutCommandHandler>();
+builder.Services.AddScoped<ICommandHandler<LogoutAllDevicesCommand>, LogoutAllDevicesCommandHandler>();
+builder.Services.AddScoped<ICommandHandler<LoginByRefreshTokenCommand, AuthTokens>,LoginByRefreshTokenCommandHandler>();
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
 var app = builder.Build();
