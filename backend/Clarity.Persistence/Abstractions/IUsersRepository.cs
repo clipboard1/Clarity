@@ -12,4 +12,6 @@ public interface IUsersRepository
     Task<Result> SaveRefreshToken(Guid userId, string token, CancellationToken cancellationToken = default);
     Task<Result<RefreshTokenEntity>> GetRefreshToken(string token, CancellationToken cancellationToken = default);
     Task <Result> UpdateRefreshToken(RefreshTokenEntity newRefreshToken, CancellationToken cancellationToken = default);
+    Task<Result> RevokeRefreshToken(string token, CancellationToken cancellationToken = default);
+    Task<Result> RevokeAllRefreshTokens(Guid userId, CancellationToken cancellationToken = default);
 }

@@ -153,4 +153,42 @@ public class UsersRepository : IUsersRepository
                                                                                $"{ex.InnerException.Message ?? ex.Message}"));
         }
     }
+
+    public async Task<Result> RevokeRefreshToken(string token, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var deletedRows = await _context.RefreshTokens
+                .Where(rt => rt.Token.Equals(token))
+                .ExecuteDeleteAsync(cancellationToken);
+            if (deletedRows == 0)
+                return Result.Failure(Result.ToDict("RefreshToken", "Token not found"));
+            
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to delete token: " + 
+                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+        }
+    }
+
+    public async Task<Result> RevokeAllRefreshTokens(Guid userId, CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var deletedRows = await _context.RefreshTokens
+                .Where(rt => rt.UserId.Equals(userId))
+                .ExecuteDeleteAsync(cancellationToken);
+            if (deletedRows == 0)
+                return Result.Failure(Result.ToDict("RefreshToken", "Token not found"));
+            
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to delete token: " + 
+                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+        }
+    }
 }
