@@ -1,3 +1,4 @@
+using Clarity.Api.Extensions;
 using Clarity.Application;
 using Clarity.Application.Abstractions;
 using Clarity.Application.LogoutAllDevices;
@@ -12,6 +13,8 @@ using Clarity.Core.Dto;
 using Clarity.Infrastructure.Authentication;
 using Clarity.Persistence.Abstractions;
 using Clarity.Persistence.Repositories;
+using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +42,11 @@ builder.Services.AddScoped<ICommandHandler<LogoutAllDevicesCommand>, LogoutAllDe
 builder.Services.AddScoped<ICommandHandler<LoginByRefreshTokenCommand, AuthTokens>,LoginByRefreshTokenCommandHandler>();
 builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
 
+builder.Services.AddApiAuthentication(
+    builder.Services
+        .BuildServiceProvider()
+        .GetRequiredService<IOptions<JwtOptions>>());
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateAsyncScope())
@@ -52,6 +60,13 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCookiePolicy(new CookiePolicyOptions
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    HttpOnly = HttpOnlyPolicy.Always,
+    Secure = CookieSecurePolicy.Always
+});
 
 app.UseHttpsRedirection();
 app.UseAuthentication();
