@@ -24,5 +24,12 @@ public class UserEntityConfiguration : IEntityTypeConfiguration<UserEntity>
         builder
             .Property(u => u.PasswordHash)
             .IsRequired();
+
+
+        builder
+            .HasMany(u => u.AppTasks)
+            .WithOne(t => t.User)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
