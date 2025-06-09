@@ -8,6 +8,8 @@ public class ClarityDbContext(DbContextOptions<ClarityDbContext> options) : DbCo
 {
     public DbSet<UserEntity> Users { get; set; }
     public DbSet<RefreshTokenEntity> RefreshTokens { get; set; }
+    public DbSet<AppTaskEntity> AppTasks { get; set; }
+    public DbSet<TagEntity> Tags { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
