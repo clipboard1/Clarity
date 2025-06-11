@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Clarity.Api.Contracts.Users;
+using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
 using Clarity.Application.LogoutAllDevices;
 using Clarity.Application.Users.Login;
@@ -28,9 +29,6 @@ public class UsersController : ControllerBase
         _commandDispatcher = commandDispatcher;
         _options = options.Value;
     }
-
-    private Guid GetCurrentUserId() =>
-        Guid.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Sub)!.Value);
     
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
@@ -154,7 +152,7 @@ public class UsersController : ControllerBase
     [Authorize]
     public async Task<IActionResult> LogoutAll()
     {
-        var userId = GetCurrentUserId();
+        var userId = this.GetCurrentUserId();
         if(userId == Guid.Empty)
             return BadRequest();
 
