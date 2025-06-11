@@ -67,14 +67,9 @@ public class AppTask
 
     }
 
-    public Result ChangeStatus(int newStatus)
+    public Result ChangeStatus(AppTaskStatus newStatus)
     {
-        if (!Enum.IsDefined(typeof(AppTaskStatus), newStatus))
-            return Result.Failure(Result.ToDict("Status", "Invalid status value"));
-
-        var parsed = (AppTaskStatus)newStatus;
-        
-        Status = parsed;
+        Status = newStatus;
         return Result.Success();
     }
 }
