@@ -33,14 +33,15 @@ public class UsersController : ControllerBase
     [HttpPost("register")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+    public async Task<IActionResult> Register(RegisterUserRequest request,
+        CancellationToken cancellationToken = default)
     {
         var regCommand = new RegisterCommand(
             request.Username,
             request.Email,
             request.Password);
 
-        var registerResult = await _commandDispatcher.DispatchAsync(regCommand);
+        var registerResult = await _commandDispatcher.DispatchAsync(regCommand, cancellationToken);
         if (!registerResult.IsSuccess)
         {
             var problemDetails = new ValidationProblemDetails(registerResult.Errors);
@@ -53,13 +54,16 @@ public class UsersController : ControllerBase
     [HttpPost("login")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Login(LoginUserRequest request)
+    public async Task<IActionResult> Login(LoginUserRequest request,
+        CancellationToken cancellationToken = default)
     {
         var logCommand = new LoginCommand(
             request.Email,
             request.Password);
 
-        var loginResult = await _commandDispatcher.DispatchAsync<LoginCommand, AuthTokens>(logCommand);
+        var loginResult = await _commandDispatcher.DispatchAsync<LoginCommand, AuthTokens>(
+            logCommand,
+            cancellationToken);
 
         if (!loginResult.IsSuccess)
         {
@@ -87,11 +91,14 @@ public class UsersController : ControllerBase
     [HttpPost("login-refresh")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> LoginByRefreshToken(string token)
+    public async Task<IActionResult> LoginByRefreshToken(string token,
+        CancellationToken cancellationToken = default)
     {
         var logCommand = new LoginByRefreshTokenCommand(Uri.UnescapeDataString(token));
 
-        var loginResult = await _commandDispatcher.DispatchAsync<LoginByRefreshTokenCommand, AuthTokens>(logCommand);
+        var loginResult = await _commandDispatcher.DispatchAsync<LoginByRefreshTokenCommand, AuthTokens>(
+            logCommand,
+            cancellationToken);
 
         if (!loginResult.IsSuccess)
         {
@@ -120,7 +127,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [Authorize]
-    public async Task<IActionResult> Logout()
+    public async Task<IActionResult> Logout(CancellationToken cancellationToken = default)
     {
         var refreshToken = HttpContext.Request.Cookies[_options.RefreshCookieName];
         if (string.IsNullOrEmpty(refreshToken))
@@ -132,7 +139,7 @@ public class UsersController : ControllerBase
 
         var logoutCommand = new LogoutCommand(refreshToken);
         
-        var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand);
+        var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand, cancellationToken);
 
         if (!logoutResult.IsSuccess)
         {
@@ -150,7 +157,7 @@ public class UsersController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [Authorize]
-    public async Task<IActionResult> LogoutAll()
+    public async Task<IActionResult> LogoutAll(CancellationToken cancellationToken = default)
     {
         var userId = this.GetCurrentUserId();
         if(userId == Guid.Empty)
@@ -158,7 +165,7 @@ public class UsersController : ControllerBase
 
         var logoutCommand = new LogoutAllDevicesCommand(userId);
         
-        var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand);
+        var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand, cancellationToken);
         if (!logoutResult.IsSuccess)
         {
             var problemDetails = new ValidationProblemDetails(logoutResult.Errors);
