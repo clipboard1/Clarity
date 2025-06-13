@@ -1,19 +1,19 @@
-﻿using Clarity.Core.Models;
+﻿using AutoMapper;
+using Clarity.Core.Models;
 using Clarity.Persistence.Abstractions;
 using Clarity.Persistence.Entitites;
-using Clarity.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Npgsql;
-
 namespace Clarity.Persistence.Repositories;
 
 public class AppTasksRepository : IAppTasksRepository
 {
     private readonly ClarityDbContext _context;
+    private readonly IMapper _mapper;
 
-    public AppTasksRepository(ClarityDbContext context)
+    public AppTasksRepository(ClarityDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<Result<List<AppTask>>> GetAll(Guid userId, CancellationToken cancellationToken = default)
@@ -25,12 +25,8 @@ public class AppTasksRepository : IAppTasksRepository
             .Where(t => t.UserId == userId)
             .Include(t => t.Tags)
             .ToListAsync(cancellationToken);
-
-        var domainTasks = 
-            tasks.Select(t => t.ToDomainModel())
-                .ToList();
-
-        return Result<List<AppTask>>.Success(domainTasks);
+        
+        return Result<List<AppTask>>.Success(_mapper.Map<List<AppTask>>(tasks));
     }
 
     public async Task<Result<AppTask>> GetById(Guid id, CancellationToken cancellationToken = default)
@@ -44,11 +40,8 @@ public class AppTasksRepository : IAppTasksRepository
         
         if (task is null)
             return Result<AppTask>.Failure(Result.ToDict("Task", "Task not found"));
-
-        var domainTask =
-            task.ToDomainModel();
         
-        return Result<AppTask>.Success(domainTask);
+        return Result<AppTask>.Success(_mapper.Map<AppTask>(task));
     }
 
     public async Task<Result<Guid>> Create(Guid userId, AppTask task, CancellationToken cancellationToken = default)
