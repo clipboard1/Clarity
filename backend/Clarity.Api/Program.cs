@@ -26,19 +26,12 @@ builder.Services.AddDispatchers();
 builder.Services.AddAuthCommands();
 builder.Services.AddAppTaskCommands();
 builder.Services.AddAppTaskQueries();
-
-builder.Services.AddApiAuthentication(
-    builder.Services
-        .BuildServiceProvider()
-        .GetRequiredService<IOptions<JwtOptions>>());
+builder.Services.AddAutoMappers();
+builder.Services.AddApiAuthentication();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateAsyncScope())
-{
-    var context = scope.ServiceProvider.GetRequiredService<ClarityDbContext>();
-    context.Database.Migrate();
-}
+app.MigrateDb();
 
 if (app.Environment.IsDevelopment())
 {

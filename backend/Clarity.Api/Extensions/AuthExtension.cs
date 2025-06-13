@@ -9,10 +9,11 @@ namespace Clarity.Api.Extensions;
 
 public static class AuthExtension
 {
-    public static void AddApiAuthentication(
-        this IServiceCollection services,
-        IOptions<JwtOptions> jwtOptions)
+    public static void AddApiAuthentication(this IServiceCollection services)
     {
+        var jwtOptions = services.BuildServiceProvider()
+            .GetRequiredService<IOptions<JwtOptions>>();
+        
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
