@@ -1,24 +1,7 @@
 using Clarity.Api.Extensions;
-using Clarity.Application;
-using Clarity.Application.Abstractions;
-using Clarity.Application.AppTasks.Create;
-using Clarity.Application.AppTasks.Delete;
-using Clarity.Application.AppTasks.GetAll;
-using Clarity.Application.AppTasks.GetById;
-using Clarity.Application.AppTasks.Update;
-using Clarity.Application.LogoutAllDevices;
-using Clarity.Application.Users.Login;
-using Clarity.Application.Users.LoginByRefreshToken;
-using Clarity.Application.Users.Logout;
-using Clarity.Application.Users.Register;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
-using Clarity.Core.Abstractions;
-using Clarity.Core.Dto;
-using Clarity.Core.Models;
 using Clarity.Infrastructure.Authentication;
-using Clarity.Persistence.Abstractions;
-using Clarity.Persistence.Repositories;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.Extensions.Options;
 
@@ -37,25 +20,12 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
 });
 
 builder.Services.AddControllers();
-builder.Services.AddSingleton<IPasswordHasher, PasswordHasher>();
-builder.Services.AddSingleton<IJwtProvider, JwtProvider>();
-builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-builder.Services.AddScoped<IAppTasksRepository, AppTasksRepository>();
-
-builder.Services.AddScoped<ICommandHandler<RegisterCommand>, RegisterCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<LoginCommand, AuthTokens>, LoginCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<LogoutCommand>, LogoutCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<LogoutAllDevicesCommand>, LogoutAllDevicesCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<LoginByRefreshTokenCommand, AuthTokens>,LoginByRefreshTokenCommandHandler>();
-
-builder.Services.AddScoped<ICommandHandler<CreateTaskCommand, Guid>, CreateTaskCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<UpdateTaskCommand>, UpdateTaskCommandHandler>();
-builder.Services.AddScoped<ICommandHandler<DeleteTaskCommand>, DeleteTaskCommandHandler>();
-builder.Services.AddScoped<IQueryHandler<GetAllTasksQuery, List<AppTask>>, GetAllTasksQueryHandler>();
-builder.Services.AddScoped<IQueryHandler<GetTaskByIdQuery, AppTask>, GetTaskByIdQueryHandler>();
-
-builder.Services.AddScoped<ICommandDispatcher, CommandDispatcher>();
-builder.Services.AddScoped<IQueryDispatcher, QueryDispatcher>();
+builder.Services.AddInfrastructure();
+builder.Services.AddRepositories();
+builder.Services.AddDispatchers();
+builder.Services.AddAuthCommands();
+builder.Services.AddAppTaskCommands();
+builder.Services.AddAppTaskQueries();
 
 builder.Services.AddApiAuthentication(
     builder.Services
