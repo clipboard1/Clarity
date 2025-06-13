@@ -16,9 +16,11 @@ public class GetAllTasksQueryHandler : IQueryHandler<GetAllTasksQuery, List<AppT
         _repository = repository;
     }
 
-    public async Task<Result<List<AppTask>>> Handle(GetAllTasksQuery tasksQuery)
+    public async Task<Result<List<AppTask>>> Handle(GetAllTasksQuery tasksQuery,
+        CancellationToken cancellationToken = default)
     {
-        var getResult = await _repository.GetAll(tasksQuery.UserId);
+        var getResult = await _repository.GetAll(tasksQuery.UserId,
+            cancellationToken);
         if (!getResult.IsSuccess)
             return Result<List<AppTask>>.Failure(getResult.Errors);
         

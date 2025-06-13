@@ -19,9 +19,11 @@ public class UpdateTaskCommandHandler : ICommandHandler<UpdateTaskCommand>
         _repository = repository;
     }
     
-    public async Task<Result> Handle(UpdateTaskCommand taskCommand)
+    public async Task<Result> Handle(UpdateTaskCommand taskCommand,
+        CancellationToken cancellationToken = default)
     {
-        var findResult = await _repository.GetById(taskCommand.Id);
+        var findResult = await _repository.GetById(taskCommand.Id,
+            cancellationToken);
         if (!findResult.IsSuccess)
             return Result.Failure(findResult.Errors);
         
@@ -41,7 +43,8 @@ public class UpdateTaskCommandHandler : ICommandHandler<UpdateTaskCommand>
         if (!createResult.IsSuccess)
             return Result.Failure(createResult.Errors);
         
-        var updateResult = await _repository.Update(createResult.Value);
+        var updateResult = await _repository.Update(createResult.Value,
+            cancellationToken);
         if (!updateResult.IsSuccess)
             return Result.Failure(updateResult.Errors);
         

@@ -21,9 +21,12 @@ public class LoginByRefreshTokenCommandHandler : ICommandHandler<LoginByRefreshT
         _jwtProvider = jwtProvider;
     }
 
-    public async Task<Result<AuthTokens>> Handle(LoginByRefreshTokenCommand command)
+    public async Task<Result<AuthTokens>> Handle(LoginByRefreshTokenCommand command,
+        CancellationToken cancellationToken = default)
     {
-        var existingRefreshToken = await _repository.GetRefreshToken(command.RefreshToken);
+        var existingRefreshToken = await _repository.GetRefreshToken(command.RefreshToken,
+            cancellationToken);
+        
         if (!existingRefreshToken.IsSuccess)
             return Result<AuthTokens>.Failure(existingRefreshToken.Errors);
         
@@ -42,7 +45,8 @@ public class LoginByRefreshTokenCommandHandler : ICommandHandler<LoginByRefreshT
         existingRefreshToken.Value.Token = _jwtProvider.GenereateRefreshToken().Value;
         existingRefreshToken.Value.ExpiresOnUtc = DateTime.UtcNow.AddDays(7);
         
-        await _repository.UpdateRefreshToken(existingRefreshToken.Value);
+        await _repository.UpdateRefreshToken(existingRefreshToken.Value,
+            cancellationToken);
 
         var tokens = new AuthTokens
         {

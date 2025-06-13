@@ -18,9 +18,11 @@ public class LogoutCommandHandler: ICommandHandler<LogoutCommand>
         _repository = repository;
     }
 
-    public async Task<Result> Handle(LogoutCommand command)
+    public async Task<Result> Handle(LogoutCommand command,
+        CancellationToken cancellationToken = default)
     {
-        var revokeResult = await _repository.RevokeRefreshToken(command.Token);
+        var revokeResult = await _repository.RevokeRefreshToken(command.Token,
+            cancellationToken);
         if (!revokeResult.IsSuccess)
             return Result.Failure(revokeResult.Errors);
         

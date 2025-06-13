@@ -25,7 +25,8 @@ public class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand, Guid>
         _repository = repository;
     }
 
-    public async Task<Result<Guid>> Handle(CreateTaskCommand taskCommand)
+    public async Task<Result<Guid>> Handle(CreateTaskCommand taskCommand,
+        CancellationToken cancellationToken = default)
     {
         var createResult = AppTask.Create(
             Guid.NewGuid(),
@@ -40,7 +41,8 @@ public class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand, Guid>
             return Result<Guid>.Failure(createResult.Errors);
 
         var saveResult = await _repository.Create(
-            taskCommand.UserId, createResult.Value);
+            taskCommand.UserId, createResult.Value,
+            cancellationToken);
         if (!saveResult.IsSuccess)
             return Result<Guid>.Failure(saveResult.Errors);
         

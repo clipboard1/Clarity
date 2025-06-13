@@ -24,9 +24,10 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTokens>
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Result<AuthTokens>> Handle(LoginCommand command)
+    public async Task<Result<AuthTokens>> Handle(LoginCommand command,
+        CancellationToken cancellationToken = default)
     {
-        var getResult = await _repository.GetByEmail(command.Email);
+        var getResult = await _repository.GetByEmail(command.Email, cancellationToken);
         if (!getResult.IsSuccess)
             return Result<AuthTokens>.Failure(getResult.Errors);
         
@@ -46,7 +47,8 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTokens>
 
         await _repository.SaveRefreshToken(
             getResult.Value.Id,
-            generateRefreshTokenResult.Value);
+            generateRefreshTokenResult.Value,
+            cancellationToken);
 
         var tokens = new AuthTokens
         {

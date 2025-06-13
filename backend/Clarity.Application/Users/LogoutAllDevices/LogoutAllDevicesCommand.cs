@@ -17,9 +17,11 @@ public class LogoutAllDevicesCommandHandler : ICommandHandler<LogoutAllDevicesCo
         _repository = repository;
     }
 
-    public async Task<Result> Handle(LogoutAllDevicesCommand command)
+    public async Task<Result> Handle(LogoutAllDevicesCommand command,
+        CancellationToken cancellationToken = default)
     {
-        var revokeResult = await _repository.RevokeAllRefreshTokens(command.UserId);
+        var revokeResult = await _repository.RevokeAllRefreshTokens(command.UserId,
+            cancellationToken);
         if (!revokeResult.IsSuccess)
             return Result.Failure(revokeResult.Errors);
         

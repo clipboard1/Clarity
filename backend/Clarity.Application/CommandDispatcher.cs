@@ -13,17 +13,19 @@ public class CommandDispatcher : ICommandDispatcher
         _serviceProvider = serviceProvider;
     }
     
-    public async Task<Result> DispatchAsync<TCommand>(TCommand command) 
+    public async Task<Result> DispatchAsync<TCommand>(TCommand command,
+        CancellationToken cancellationToken = default) 
         where TCommand : ICommand
     {
         var handler = _serviceProvider.GetService<ICommandHandler<TCommand>>();
         if (handler == null)
             throw new InvalidOperationException($"Handler for command {typeof(TCommand).Name} not found.");
 
-        return await handler.Handle(command);
+        return await handler.Handle(command, cancellationToken);
     }
     
-    public async Task<Result<TResponse>> DispatchAsync<TCommand, TResponse>(TCommand command)
+    public async Task<Result<TResponse>> DispatchAsync<TCommand, TResponse>(TCommand command,
+        CancellationToken cancellationToken = default)
         where TCommand : ICommand<TResponse>
     {
         var handlerType = typeof(ICommandHandler<,>).MakeGenericType(command.GetType(), typeof(TResponse));
@@ -31,6 +33,6 @@ public class CommandDispatcher : ICommandDispatcher
         if (handler == null)
             throw new InvalidOperationException($"Handler for command {typeof(TCommand).Name} not found.");
 
-        return await handler.Handle(command);
+        return await handler.Handle(command, cancellationToken);
     }
 }

@@ -3,9 +3,11 @@
 namespace Clarity.Application.Abstractions;
 public interface ICommandDispatcher
 {
-    Task<Result> DispatchAsync<TCommand>(TCommand command)
+    Task<Result> DispatchAsync<TCommand>(TCommand command,
+        CancellationToken cancellationToken = default)
         where TCommand : ICommand;
 
-    Task<Result<TResponse>> DispatchAsync<TCommand, TResponse>(TCommand command)
+    Task<Result<TResponse>> DispatchAsync<TCommand, TResponse>(TCommand command,
+        CancellationToken cancellationToken = default)
         where TCommand : ICommand<TResponse>;
 }

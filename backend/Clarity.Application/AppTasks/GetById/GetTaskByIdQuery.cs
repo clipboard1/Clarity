@@ -16,9 +16,11 @@ public class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, AppTask>
         _repository = repository;
     }
 
-    public async Task<Result<AppTask>> Handle(GetTaskByIdQuery query)
+    public async Task<Result<AppTask>> Handle(GetTaskByIdQuery query,
+        CancellationToken cancellationToken = default)
     {
-        var getResult = await _repository.GetById(query.Id);
+        var getResult = await _repository.GetById(query.Id,
+            cancellationToken);
         if (!getResult.IsSuccess)
             return Result<AppTask>.Failure(getResult.Errors);
         

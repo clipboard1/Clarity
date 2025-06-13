@@ -12,7 +12,8 @@ public class QueryDispatcher : IQueryDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public async Task<Result<TResponse>> DispatchAsync<TQuery, TResponse>(TQuery query) 
+    public async Task<Result<TResponse>> DispatchAsync<TQuery, TResponse>(TQuery query,
+        CancellationToken cancellationToken = default) 
         where TQuery : IQuery<TResponse>
     {
         var handlerType = typeof(IQueryHandler<,>).MakeGenericType(query.GetType(), typeof(TResponse));
@@ -20,6 +21,6 @@ public class QueryDispatcher : IQueryDispatcher
         if (handler == null)
             throw new InvalidOperationException($"Handler for command {typeof(TQuery).Name} not found.");
 
-        return await handler.Handle(query);
+        return await handler.Handle(query, cancellationToken);
     }
 }

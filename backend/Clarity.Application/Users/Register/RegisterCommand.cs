@@ -24,7 +24,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand>
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Result> Handle(RegisterCommand command)
+    public async Task<Result> Handle(RegisterCommand command,
+        CancellationToken cancellationToken = default)
     {
         if (string.IsNullOrEmpty(command.Username))
             return Result.Failure(Result.ToDict("Username", "Username is required"));
@@ -47,7 +48,8 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand>
         if (!createResult.IsSuccess)
             return Result.Failure(createResult.Errors);
         
-        var saveResult = await _repository.Add(createResult.Value);
+        var saveResult = await _repository.Add(createResult.Value,
+            cancellationToken);
         
         if (!saveResult.IsSuccess)
             return Result.Failure(saveResult.Errors);
