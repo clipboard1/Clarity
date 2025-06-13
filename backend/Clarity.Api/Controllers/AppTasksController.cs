@@ -1,4 +1,5 @@
-﻿using Clarity.Api.Contracts.AppTasks;
+﻿using AutoMapper;
+using Clarity.Api.Contracts.AppTasks;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
 using Clarity.Application.AppTasks.Create;
@@ -19,11 +20,13 @@ public class AppTasksController: ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
+    private readonly IMapper _mapper;
 
-    public AppTasksController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+    public AppTasksController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, IMapper mapper)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
+        _mapper = mapper;
     }
 
     [Authorize]
@@ -43,15 +46,7 @@ public class AppTasksController: ControllerBase
             return BadRequest(problemDetails);
         }
 
-        var responseTasks = getResult.Value
-            .Select(at => new AppTaskResponse(
-                at.Id, at.Title,
-                at.Description, at.CreationDate,
-                at.Deadline, at.Tags, 
-                at.Status))
-            .ToList();
-
-        return Ok(responseTasks);
+        return Ok(_mapper.Map<List<AppTaskResponse>>(getResult.Value));
     }
     
     
@@ -73,13 +68,7 @@ public class AppTasksController: ControllerBase
             return BadRequest(problemDetails);
         }
 
-        var responseTask = new AppTaskResponse(
-            getResult.Value.Id, getResult.Value.Title,
-            getResult.Value.Description, getResult.Value.CreationDate,
-            getResult.Value.Deadline, getResult.Value.Tags,
-            getResult.Value.Status);
-
-        return Ok(responseTask);
+        return Ok(_mapper.Map<AppTaskResponse>(getResult.Value));
     }
 
     [Authorize]

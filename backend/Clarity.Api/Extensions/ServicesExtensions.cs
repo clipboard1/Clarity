@@ -1,4 +1,5 @@
-﻿using Clarity.Application;
+﻿using Clarity.Api.Mappings;
+using Clarity.Application;
 using Clarity.Application.Abstractions;
 using Clarity.Application.AppTasks.Create;
 using Clarity.Application.AppTasks.Delete;
@@ -15,6 +16,7 @@ using Clarity.Core.Dto;
 using Clarity.Core.Models;
 using Clarity.Infrastructure.Authentication;
 using Clarity.Persistence.Abstractions;
+using Clarity.Persistence.Mappings;
 using Clarity.Persistence.Repositories;
 
 namespace Clarity.Api.Extensions;
@@ -59,5 +61,11 @@ public static class ServicesExtensions
     {
         services.AddScoped<IQueryHandler<GetAllTasksQuery, List<AppTask>>, GetAllTasksQueryHandler>();
         services.AddScoped<IQueryHandler<GetTaskByIdQuery, AppTask>, GetTaskByIdQueryHandler>();
+    }
+
+    public static void AddAutoMappers(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(AppTaskApiMappingProfile));
+        services.AddAutoMapper(typeof(AppTaskPersistenceMappingProfile));
     }
 }
