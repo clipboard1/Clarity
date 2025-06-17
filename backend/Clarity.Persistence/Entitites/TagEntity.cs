@@ -6,5 +6,5 @@ public class TagEntity
     public string Name { get; set; }
     public Guid AppTaskId { get; set; }
     
-    public virtual ICollection<AppTaskEntity>? AppTasks { get; set; }
+    public virtual AppTaskEntity AppTask { get; set; }
 }

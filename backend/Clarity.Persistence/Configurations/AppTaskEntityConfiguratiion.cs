@@ -36,13 +36,8 @@ public class AppTaskEntityConfiguratiion : IEntityTypeConfiguration<AppTaskEntit
 
         builder
             .HasMany(t => t.Tags)
-            .WithMany(t => t.AppTasks)
-            .UsingEntity<TaskTagEntity>(
-                r => r.HasOne<TagEntity>()
-                    .WithMany().HasForeignKey(t => t.TagId)
-                    .OnDelete(DeleteBehavior.Cascade),
-                l => l.HasOne<AppTaskEntity>()
-                    .WithMany().HasForeignKey(t => t.AppTaskId)
-                    .OnDelete(DeleteBehavior.Cascade));
+            .WithOne(t => t.AppTask)
+            .HasForeignKey(t => t.AppTaskId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

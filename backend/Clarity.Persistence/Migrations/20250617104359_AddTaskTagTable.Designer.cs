@@ -3,6 +3,7 @@ using System;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Clarity.Persistence.Migrations
 {
     [DbContext(typeof(ClarityDbContext))]
-    partial class ClarityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250617104359_AddTaskTagTable")]
+    partial class AddTaskTagTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,9 +100,22 @@ namespace Clarity.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppTaskId");
-
                     b.ToTable("Tags");
+                });
+
+            modelBuilder.Entity("Clarity.Persistence.Entitites.TaskTagEntity", b =>
+                {
+                    b.Property<Guid>("AppTaskId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("TagId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("AppTaskId", "TagId");
+
+                    b.HasIndex("TagId");
+
+                    b.ToTable("TaskTags");
                 });
 
             modelBuilder.Entity("Clarity.Persistence.Entitites.UserEntity", b =>
@@ -148,20 +164,19 @@ namespace Clarity.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Clarity.Persistence.Entitites.TagEntity", b =>
+            modelBuilder.Entity("Clarity.Persistence.Entitites.TaskTagEntity", b =>
                 {
-                    b.HasOne("Clarity.Persistence.Entitites.AppTaskEntity", "AppTask")
-                        .WithMany("Tags")
+                    b.HasOne("Clarity.Persistence.Entitites.AppTaskEntity", null)
+                        .WithMany()
                         .HasForeignKey("AppTaskId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppTask");
-                });
-
-            modelBuilder.Entity("Clarity.Persistence.Entitites.AppTaskEntity", b =>
-                {
-                    b.Navigation("Tags");
+                    b.HasOne("Clarity.Persistence.Entitites.TagEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TagId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Clarity.Persistence.Entitites.UserEntity", b =>
