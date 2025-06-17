@@ -2,14 +2,15 @@
 using Clarity.Api.Contracts.Users;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
-using Clarity.Application.LogoutAllDevices;
 using Clarity.Application.Users.Login;
 using Clarity.Application.Users.LoginByRefreshToken;
 using Clarity.Application.Users.Logout;
+using Clarity.Application.Users.LogoutAllDevices;
 using Clarity.Application.Users.Register;
 using Clarity.Core.Dto;
 using Clarity.Core.Models;
 using Clarity.Infrastructure.Authentication;
+using Clarity.Infrastructure.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -31,6 +32,7 @@ public class UsersController : ControllerBase
     }
     
     [HttpPost("register")]
+    [ValidateModel<RegisterUserRequest>]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Register(RegisterUserRequest request,
@@ -52,6 +54,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost("login")]
+    [ValidateModel<LoginUserRequest>]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Login(LoginUserRequest request,

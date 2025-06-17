@@ -9,6 +9,7 @@ using Clarity.Application.AppTasks.GetById;
 using Clarity.Application.AppTasks.Update;
 using Clarity.Core.Enums;
 using Clarity.Core.Models;
+using Clarity.Infrastructure.Validation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -73,6 +74,7 @@ public class AppTasksController: ControllerBase
 
     [Authorize]
     [HttpPost]
+    [ValidateModel<AppTaskCreateRequest>]
     [ProducesResponseType(typeof(Guid), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,6 +100,7 @@ public class AppTasksController: ControllerBase
 
     [Authorize]
     [HttpPut]
+    [ValidateModel<AppTaskUpdateRequest>]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
