@@ -1,5 +1,5 @@
-﻿using Clarity.Core.Enums;
-using Clarity.Core.Models;
+﻿using Clarity.Api.Contracts.Tags;
+using Clarity.Core.Enums;
 
 namespace Clarity.Api.Contracts.AppTasks;
 
@@ -9,5 +9,5 @@ public record AppTaskResponse(
     string Description,
     DateTime CreationDate,
     DateTime Deadline,
-    ICollection<Tag> Tags,
+    ICollection<TagResponse> Tags,
     AppTaskStatus Status);
