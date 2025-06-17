@@ -69,8 +69,8 @@ public class AppTasksRepository : IAppTasksRepository
         
         try
         {
-            await _context.AppTasks.AddAsync(taskEntity);
-            await _context.SaveChangesAsync();
+            await _context.AppTasks.AddAsync(taskEntity, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
             return Result<Guid>.Success(taskEntity.Id);
         }
         catch (DbUpdateException ex)
@@ -128,7 +128,7 @@ public class AppTasksRepository : IAppTasksRepository
         }
         catch (DbUpdateException ex)
         {
-            return Result<Guid>.Failure(Result.ToDict("General", $"Failed to delete task: " +
+            return Result.Failure(Result.ToDict("General", $"Failed to delete task: " +
                                                                  $"{ex.InnerException.Message ?? ex.Message}"));
         }
     }
