@@ -3,7 +3,6 @@ using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Clarity.Infrastructure.Authentication;
 using Microsoft.AspNetCore.CookiePolicy;
-using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,10 +23,11 @@ builder.Services.AddInfrastructure();
 builder.Services.AddRepositories();
 builder.Services.AddDispatchers();
 builder.Services.AddAuthCommands();
-builder.Services.AddAppTaskCommands();
-builder.Services.AddAppTaskQueries();
+builder.Services.AddAppTaskCommandsAndQueries();
 builder.Services.AddAutoMappers();
 builder.Services.AddApiAuthentication();
+builder.Services.AddApiValidators();
+builder.Services.AddAppValidators();
 
 var app = builder.Build();
 
