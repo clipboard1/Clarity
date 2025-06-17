@@ -33,6 +33,9 @@ public class UpdateTaskCommandHandler : ICommandHandler<UpdateTaskCommand>
         var newDescription = taskCommand.Update.Description ?? existingTask.Description;
         var newDeadline =  taskCommand.Update.Deadline ?? existingTask.Deadline;
         var newStatus = taskCommand.Update.Status ?? existingTask.Status;
+
+        if (newDeadline < existingTask.CreationDate)
+            return Result.Failure(Result.ToDict("Deadline", "Deadline must be later than creation date"));
         
         var createResult = AppTask.Create(
             existingTask.Id, taskCommand.Id,
