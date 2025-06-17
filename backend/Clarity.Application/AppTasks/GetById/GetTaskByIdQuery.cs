@@ -4,7 +4,9 @@ using Clarity.Persistence.Abstractions;
 
 namespace Clarity.Application.AppTasks.GetById;
 
-public record GetTaskByIdQuery(Guid Id)
+public record GetTaskByIdQuery(
+    Guid Id,
+    Guid UserId)
     : IQuery<AppTask>;
     
 public class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, AppTask>
@@ -23,6 +25,9 @@ public class GetTaskByIdQueryHandler : IQueryHandler<GetTaskByIdQuery, AppTask>
             cancellationToken);
         if (!getResult.IsSuccess)
             return Result<AppTask>.Failure(getResult.Errors);
+        
+        if (getResult.Value.UserId != query.UserId)
+            return Result<AppTask>.Failure(Result.ToDict("User", "Access denied"));
         
         return Result<AppTask>.Success(getResult.Value);
     }

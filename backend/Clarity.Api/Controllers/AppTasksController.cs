@@ -59,7 +59,7 @@ public class AppTasksController: ControllerBase
     public async Task<ActionResult<AppTaskResponse>> GetAppTask(Guid id,
         CancellationToken cancellationToken = default)
     {
-        var getByIdQuery = new GetTaskByIdQuery(id);
+        var getByIdQuery = new GetTaskByIdQuery(id, this.GetCurrentUserId());
         var getResult = await _queryDispatcher.DispatchAsync<GetTaskByIdQuery, AppTask>(
             getByIdQuery,
             cancellationToken);
@@ -141,7 +141,7 @@ public class AppTasksController: ControllerBase
         if (id == Guid.Empty)
             return BadRequest("Task id cannot be empty");
 
-        var deleteCommand = new DeleteTaskCommand(id);
+        var deleteCommand = new DeleteTaskCommand(id, this.GetCurrentUserId());
         var deleteResult = await _commandDispatcher.DispatchAsync(
             deleteCommand,
             cancellationToken);

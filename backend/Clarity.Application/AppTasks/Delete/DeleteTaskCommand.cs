@@ -4,7 +4,9 @@ using Clarity.Persistence.Abstractions;
 
 namespace Clarity.Application.AppTasks.Delete;
 
-public record DeleteTaskCommand(Guid Id)
+public record DeleteTaskCommand(
+    Guid Id,
+    Guid UserId)
     : ICommand;
     
 public class DeleteTaskCommandHandler : ICommandHandler<DeleteTaskCommand>
@@ -16,15 +18,18 @@ public class DeleteTaskCommandHandler : ICommandHandler<DeleteTaskCommand>
         _repository = repository;
     }
     
-    public async Task<Result> Handle(DeleteTaskCommand taskCommand,
+    public async Task<Result> Handle(DeleteTaskCommand command,
         CancellationToken cancellationToken = default)
     {
-        var getResult = await _repository.GetById(taskCommand.Id,
+        var getResult = await _repository.GetById(command.Id,
             cancellationToken);
         if (!getResult.IsSuccess)
             return Result.Failure(getResult.Errors);
+        
+        if(getResult.Value.UserId != command.UserId)
+            return Result.Failure(Result.ToDict("User", "Access denied"));
 
-        var deleteResult = await _repository.Delete(taskCommand.Id,
+        var deleteResult = await _repository.Delete(command.Id,
             cancellationToken);
         if (!deleteResult.IsSuccess)
             return Result.Failure(deleteResult.Errors);

@@ -19,26 +19,29 @@ public class UpdateTaskCommandHandler : ICommandHandler<UpdateTaskCommand>
         _repository = repository;
     }
     
-    public async Task<Result> Handle(UpdateTaskCommand taskCommand,
+    public async Task<Result> Handle(UpdateTaskCommand command,
         CancellationToken cancellationToken = default)
     {
-        var findResult = await _repository.GetById(taskCommand.Id,
+        var findResult = await _repository.GetById(command.Id,
             cancellationToken);
         if (!findResult.IsSuccess)
             return Result.Failure(findResult.Errors);
         
         var existingTask = findResult.Value;
         
-        var newTitle = taskCommand.Update.Title ?? existingTask.Title;
-        var newDescription = taskCommand.Update.Description ?? existingTask.Description;
-        var newDeadline =  taskCommand.Update.Deadline ?? existingTask.Deadline;
-        var newStatus = taskCommand.Update.Status ?? existingTask.Status;
+        if(existingTask.UserId != command.UserId)
+            return Result.Failure(Result.ToDict("User", "Access denied"));
+        
+        var newTitle = command.Update.Title ?? existingTask.Title;
+        var newDescription = command.Update.Description ?? existingTask.Description;
+        var newDeadline =  command.Update.Deadline ?? existingTask.Deadline;
+        var newStatus = command.Update.Status ?? existingTask.Status;
 
         if (newDeadline < existingTask.CreationDate)
             return Result.Failure(Result.ToDict("Deadline", "Deadline must be later than creation date"));
         
         var createResult = AppTask.Create(
-            existingTask.Id, taskCommand.Id,
+            existingTask.Id, command.Id,
             newTitle, newDescription, existingTask.CreationDate,
             newDeadline,  existingTask.Tags,
             newStatus
