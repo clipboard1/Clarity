@@ -1,5 +1,6 @@
 ﻿using Clarity.Api.Mappings;
 using Clarity.Api.Validators.AppTasks;
+using Clarity.Api.Validators.Tags;
 using Clarity.Api.Validators.Users;
 using Clarity.Application;
 using Clarity.Application.Abstractions;
@@ -8,6 +9,9 @@ using Clarity.Application.AppTasks.Delete;
 using Clarity.Application.AppTasks.GetAll;
 using Clarity.Application.AppTasks.GetById;
 using Clarity.Application.AppTasks.Update;
+using Clarity.Application.Tags.Create;
+using Clarity.Application.Tags.Delete;
+using Clarity.Application.Tags.GetAllByTask;
 using Clarity.Application.Users.Login;
 using Clarity.Application.Users.LoginByRefreshToken;
 using Clarity.Application.Users.Logout;
@@ -39,6 +43,7 @@ public static class ServicesExtensions
     {
         services.AddScoped<IUsersRepository, UsersRepository>();
         services.AddScoped<IAppTasksRepository, AppTasksRepository>();
+        services.AddScoped<ITagRepository, TagRepository>();
     }
 
     public static void AddDispatchers(this IServiceCollection services)
@@ -64,6 +69,14 @@ public static class ServicesExtensions
         services.AddScoped<IQueryHandler<GetAllTasksQuery, List<AppTask>>, GetAllTasksQueryHandler>();
         services.AddScoped<IQueryHandler<GetTaskByIdQuery, AppTask>, GetTaskByIdQueryHandler>();
     }
+
+
+    public static void AddTagCommandsAndQueries(this IServiceCollection services)
+    {
+        services.AddScoped<ICommandHandler<CreateTagCommand, int>, CreateTagCommandHandler>();
+        services.AddScoped<ICommandHandler<DeleteTagCommand>, DeleteTagCommandHandler>();
+        services.AddScoped<IQueryHandler<GetAllTagsByTaskQuery, List<Tag>>, GetAllTagsByTaskQueryHandler>();
+    }
     
     public static void AddAutoMappers(this IServiceCollection services)
     {
@@ -76,7 +89,9 @@ public static class ServicesExtensions
         services.AddValidatorsFromAssemblyContaining<AppTaskCreateRequestValidator>();
         services.AddValidatorsFromAssemblyContaining<AppTaskUpdateRequestValidator>();
         services.AddValidatorsFromAssemblyContaining<LoginUserRequestValidator>();
-        services.AddValidatorsFromAssemblyContaining<RegisterCommand>();
+        services.AddValidatorsFromAssemblyContaining<RegisterUserRequestValidator>();
+        
+        services.AddValidatorsFromAssemblyContaining<TagCreateRequestValidator>();
     }
     
     public static void AddAppValidators(this IServiceCollection services)

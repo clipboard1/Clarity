@@ -24,6 +24,7 @@ builder.Services.AddRepositories();
 builder.Services.AddDispatchers();
 builder.Services.AddAuthCommands();
 builder.Services.AddAppTaskCommandsAndQueries();
+builder.Services.AddTagCommandsAndQueries();
 builder.Services.AddAutoMappers();
 builder.Services.AddApiAuthentication();
 builder.Services.AddApiValidators();
