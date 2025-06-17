@@ -42,7 +42,6 @@ public class AppTasksController: ControllerBase
             getAllQuery,
             cancellationToken);
         if (!getResult.IsSuccess)
-            
             return BadRequest(new ValidationProblemDetails(getResult.Errors));
 
 
