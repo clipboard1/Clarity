@@ -45,10 +45,7 @@ public class UsersController : ControllerBase
 
         var registerResult = await _commandDispatcher.DispatchAsync(regCommand, cancellationToken);
         if (!registerResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(registerResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(registerResult.Errors));
         
         return Created();
     }
@@ -69,10 +66,7 @@ public class UsersController : ControllerBase
             cancellationToken);
 
         if (!loginResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(loginResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(loginResult.Errors));
         
         HttpContext.Response.Cookies.Append(
             _options.AuthCookieName,
@@ -104,10 +98,7 @@ public class UsersController : ControllerBase
             cancellationToken);
 
         if (!loginResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(loginResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(loginResult.Errors));
         
         HttpContext.Response.Cookies.Append(
             _options.AuthCookieName,
@@ -134,21 +125,15 @@ public class UsersController : ControllerBase
     {
         var refreshToken = HttpContext.Request.Cookies[_options.RefreshCookieName];
         if (string.IsNullOrEmpty(refreshToken))
-        {
-            var problemDetails = new ValidationProblemDetails(
-                Result.ToDict("RefreshToken", "No token provided"));
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(
+                Result.ToDict("RefreshToken", "No token provided")));
 
         var logoutCommand = new LogoutCommand(refreshToken);
         
         var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand, cancellationToken);
 
         if (!logoutResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(logoutResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(logoutResult.Errors));
         
         HttpContext.Response.Cookies.Delete(_options.AuthCookieName);
         HttpContext.Response.Cookies.Delete(_options.RefreshCookieName);
@@ -170,10 +155,7 @@ public class UsersController : ControllerBase
         
         var logoutResult = await _commandDispatcher.DispatchAsync(logoutCommand, cancellationToken);
         if (!logoutResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(logoutResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(logoutResult.Errors));
         
         HttpContext.Response.Cookies.Delete(_options.AuthCookieName);
         HttpContext.Response.Cookies.Delete(_options.RefreshCookieName);

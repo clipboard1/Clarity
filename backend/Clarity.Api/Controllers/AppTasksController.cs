@@ -42,10 +42,9 @@ public class AppTasksController: ControllerBase
             getAllQuery,
             cancellationToken);
         if (!getResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(getResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            
+            return BadRequest(new ValidationProblemDetails(getResult.Errors));
+
 
         return Ok(_mapper.Map<List<AppTaskResponse>>(getResult.Value));
     }
@@ -64,10 +63,7 @@ public class AppTasksController: ControllerBase
             getByIdQuery,
             cancellationToken);
         if (!getResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(getResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(getResult.Errors));
 
         return Ok(_mapper.Map<AppTaskResponse>(getResult.Value));
     }
@@ -90,10 +86,7 @@ public class AppTasksController: ControllerBase
             createCommand,
             cancellationToken);
         if (!createResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(createResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(createResult.Errors));
     
         return CreatedAtAction(nameof(GetAppTask), new { id = createResult.Value }, createResult.Value);
     }
@@ -122,10 +115,8 @@ public class AppTasksController: ControllerBase
             updateCommand,
             cancellationToken);
         if (!updateResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(updateResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(updateResult.Errors));
+
 
         return Ok();
     }
@@ -146,10 +137,7 @@ public class AppTasksController: ControllerBase
             deleteCommand,
             cancellationToken);
         if (!deleteResult.IsSuccess)
-        {
-            var problemDetails = new ValidationProblemDetails(deleteResult.Errors);
-            return BadRequest(problemDetails);
-        }
+            return BadRequest(new ValidationProblemDetails(deleteResult.Errors));
         
         return NoContent();
     }
