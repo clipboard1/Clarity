@@ -16,7 +16,7 @@ public class Tag
         AppTaskId = appTaskId;
     }
 
-    public Result<Tag> Create(int id, string name, Guid appTaskId)
+    public static Result<Tag> Create(int id, string name, Guid appTaskId)
     {
         var errors = new Dictionary<string, string[]>();
         

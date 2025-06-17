@@ -17,7 +17,7 @@ public class TagRepository : ITagRepository
         _mapper = mapper;
     }
 
-    public async Task<Result<List<Tag>>> GetAllByTask(Guid taskId, CancellationToken cancellationToken)
+    public async Task<Result<List<Tag>>> GetAllByTask(Guid taskId, CancellationToken cancellationToken = default)
     {
         if (taskId == Guid.Empty)
             return Result<List<Tag>>.Failure(Result.ToDict("TaskId", "Task id cannot be empty"));
@@ -29,7 +29,7 @@ public class TagRepository : ITagRepository
         return Result<List<Tag>>.Success(_mapper.Map<List<Tag>>(tags));
     }
 
-    public async Task<Result<int>> Create(Tag tag, CancellationToken cancellationToken)
+    public async Task<Result<int>> Create(Tag tag, CancellationToken cancellationToken = default)
     {
         var existingTag = await _context.Tags
             .AnyAsync(t =>
@@ -58,7 +58,7 @@ public class TagRepository : ITagRepository
         }
     }
 
-    public async Task<Result> Delete(int id, CancellationToken cancellationToken)
+    public async Task<Result> Delete(int id, CancellationToken cancellationToken = default)
     {
         if (id == 0)
             return Result.Failure(Result.ToDict("Tag", "Tag id cannot be empty"));
