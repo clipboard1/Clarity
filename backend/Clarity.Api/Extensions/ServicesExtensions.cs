@@ -14,6 +14,7 @@ using Clarity.Application.Users.Logout;
 using Clarity.Application.Users.LogoutAllDevices;
 using Clarity.Application.Users.Register;
 using Clarity.Application.Validators.AppTasks;
+using Clarity.Application.Validators.Tags;
 using Clarity.Application.Validators.User;
 using Clarity.Core.Abstractions;
 using Clarity.Core.Dto;
@@ -68,7 +69,6 @@ public static class ServicesExtensions
     {
         services.AddAutoMapper(typeof(AppTaskApiMappingProfile));
         services.AddAutoMapper(typeof(AppTaskPersistenceMappingProfile));
-        services.AddAutoMapper(typeof(TagPersistenceMappingProfile));
     }
 
     public static void AddApiValidators(this IServiceCollection services)
@@ -92,5 +92,9 @@ public static class ServicesExtensions
         services.AddValidatorsFromAssemblyContaining<LogoutAllDevicesCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<LogoutCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterCommandValidator>();
+        
+        services.AddValidatorsFromAssemblyContaining<CreateTagCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<DeleteTagCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetAllTagsByTaskQueryValidator>();
     }
 }
