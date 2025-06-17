@@ -29,7 +29,7 @@ public class AppTask
     public DateTime CreationDate { get; }
     public DateTime Deadline { get; }
     public AppTaskStatus Status { set; get; }
-    public ICollection<Tag> Tags { get; }
+    public ICollection<Tag> Tags { get; set;  }
     
     public static Result<AppTask> Create(Guid id, Guid userId, string title,
         string description, DateTime creationDate, DateTime deadline,

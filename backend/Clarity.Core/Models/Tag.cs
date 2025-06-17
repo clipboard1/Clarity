@@ -25,7 +25,7 @@ public class Tag
         
         if (string.IsNullOrEmpty(name) || name.Length < MIN_NAME_LENGTH)
             errors.Add("Name", [$"Name must be not null and at least {MIN_NAME_LENGTH} characters."]);
-        else if (name.Length > MIN_NAME_LENGTH)
+        else if (name.Length > MAX_NAME_LENGTH)
             errors.Add("Name", [$"Name must be less than {MAX_NAME_LENGTH} characters."]);
         
         if (errors.Any())
