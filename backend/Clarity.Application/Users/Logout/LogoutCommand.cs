@@ -17,7 +17,7 @@ public class LogoutCommandHandler: ICommandHandler<LogoutCommand>
     {
         _repository = repository;
     }
-
+    
     public async Task<Result> Handle(LogoutCommand command,
         CancellationToken cancellationToken = default)
     {

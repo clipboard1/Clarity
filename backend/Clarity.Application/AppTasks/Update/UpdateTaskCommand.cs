@@ -1,5 +1,5 @@
-﻿using Clarity.Core.Models;
-using Clarity.Application.Abstractions;
+﻿using Clarity.Application.Abstractions;
+using Clarity.Core.Models;
 using Clarity.Persistence.Abstractions;
 
 namespace Clarity.Application.AppTasks.Update;

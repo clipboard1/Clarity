@@ -23,7 +23,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, AuthTokens>
         _jwtProvider = jwtProvider;
         _passwordHasher = passwordHasher;
     }
-
+    
     public async Task<Result<AuthTokens>> Handle(LoginCommand command,
         CancellationToken cancellationToken = default)
     {

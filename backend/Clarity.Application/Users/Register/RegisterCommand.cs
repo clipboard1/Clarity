@@ -23,20 +23,10 @@ public class RegisterCommandHandler : ICommandHandler<RegisterCommand>
         _repository = repository;
         _passwordHasher = passwordHasher;
     }
-
+    
     public async Task<Result> Handle(RegisterCommand command,
         CancellationToken cancellationToken = default)
     {
-        if (string.IsNullOrEmpty(command.Username))
-            return Result.Failure(Result.ToDict("Username", "Username is required"));
-
-        if (string.IsNullOrEmpty(command.Email))
-            return Result.Failure(Result.ToDict("Email", "Email is required"));
-
-        if (string.IsNullOrEmpty(command.Password))
-            return Result.Failure(Result.ToDict("Password", "Password is required"));
-            
-        
         string hashedPassword = _passwordHasher.Generate(command.Password);
         
         var createResult = User.Create(

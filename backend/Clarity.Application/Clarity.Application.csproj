@@ -8,7 +8,12 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Clarity.Core\Clarity.Core.csproj" />
+      <ProjectReference Include="..\Clarity.Infrastructure\Clarity.Infrastructure.csproj" />
       <ProjectReference Include="..\Clarity.Persistence\Clarity.Persistence.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.0.0" />
     </ItemGroup>
 
 </Project>

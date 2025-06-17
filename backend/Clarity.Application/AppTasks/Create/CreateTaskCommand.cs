@@ -1,5 +1,4 @@
-﻿using System.Windows.Input;
-using Clarity.Application.Abstractions;
+﻿using Clarity.Application.Abstractions;
 using Clarity.Core.Enums;
 using Clarity.Core.Models;
 using Clarity.Persistence.Abstractions;
@@ -24,7 +23,7 @@ public class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand, Guid>
     {
         _repository = repository;
     }
-
+    
     public async Task<Result<Guid>> Handle(CreateTaskCommand taskCommand,
         CancellationToken cancellationToken = default)
     {

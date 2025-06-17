@@ -2,7 +2,7 @@
 using Clarity.Core.Models;
 using Clarity.Persistence.Abstractions;
 
-namespace Clarity.Application.LogoutAllDevices;
+namespace Clarity.Application.Users.LogoutAllDevices;
 
 public record LogoutAllDevicesCommand(
     Guid UserId)
@@ -16,7 +16,7 @@ public class LogoutAllDevicesCommandHandler : ICommandHandler<LogoutAllDevicesCo
     {
         _repository = repository;
     }
-
+    
     public async Task<Result> Handle(LogoutAllDevicesCommand command,
         CancellationToken cancellationToken = default)
     {

@@ -20,7 +20,7 @@ public class LoginByRefreshTokenCommandHandler : ICommandHandler<LoginByRefreshT
         _repository = repository;
         _jwtProvider = jwtProvider;
     }
-
+    
     public async Task<Result<AuthTokens>> Handle(LoginByRefreshTokenCommand command,
         CancellationToken cancellationToken = default)
     {
