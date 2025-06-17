@@ -68,6 +68,7 @@ public static class ServicesExtensions
     {
         services.AddAutoMapper(typeof(AppTaskApiMappingProfile));
         services.AddAutoMapper(typeof(AppTaskPersistenceMappingProfile));
+        services.AddAutoMapper(typeof(TagPersistenceMappingProfile));
     }
 
     public static void AddApiValidators(this IServiceCollection services)

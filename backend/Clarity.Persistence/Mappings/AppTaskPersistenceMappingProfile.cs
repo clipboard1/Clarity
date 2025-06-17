@@ -9,7 +9,5 @@ public class AppTaskPersistenceMappingProfile : Profile
     public AppTaskPersistenceMappingProfile()
     {
         CreateMap<AppTaskEntity, AppTask>();
-
-        CreateMap<TagEntity, Tag>();
     }
 }
