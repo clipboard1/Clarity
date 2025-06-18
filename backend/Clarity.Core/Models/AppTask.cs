@@ -58,10 +58,4 @@ public class AppTask
         return Result<AppTask>.Success(task);
 
     }
-
-    public Result ChangeStatus(AppTaskStatus newStatus)
-    {
-        Status = newStatus;
-        return Result.Success();
-    }
 }
