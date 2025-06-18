@@ -1,4 +1,5 @@
-﻿using Clarity.Core.Models;
+﻿using Clarity.Core.Enums;
+using Clarity.Core.Models;
 
 namespace Clarity.Persistence.Abstractions;
 
@@ -9,4 +10,5 @@ public interface IAppTasksRepository
     Task<Result<Guid>> Create(Guid userId, AppTask task, CancellationToken cancellationToken = default);
     Task<Result> Update(AppTask task, CancellationToken cancellationToken = default);
     Task<Result> Delete(Guid id, CancellationToken cancellationToken = default);
+    Task<Result> ChangeStatus(Guid id, AppTaskStatus newStatus, CancellationToken cancellationToken = default);
 }

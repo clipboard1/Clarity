@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Clarity.Core.Enums;
 using Clarity.Core.Models;
 using Clarity.Persistence.Abstractions;
 using Clarity.Persistence.Entitites;
@@ -130,8 +131,26 @@ public class AppTasksRepository : IAppTasksRepository
         }
     }
 
-    public Task<Result> ChangeStatus(Guid id, int status, CancellationToken cancellationToken = default)
+    public async Task<Result> ChangeStatus(Guid id, AppTaskStatus newStatus, CancellationToken cancellationToken = default)
     {
-        throw new NotImplementedException();
+        try
+        {
+            var updateRows = await _context.AppTasks
+                .Where(t => 
+                    t.Id == id)
+                .ExecuteUpdateAsync(s => s
+                        .SetProperty(t => t.Status, newStatus),
+                    cancellationToken);
+            
+            if (updateRows == 0)
+                return Result.Failure(Result.ToDict("Task", "Task not found."));
+            
+            return Result.Success();
+        }
+        catch (DbUpdateException ex)
+        {
+            return Result<Guid>.Failure(Result.ToDict("General", $"Failed to create task: " +
+                                                                 $"{ex.InnerException?.Message ?? ex.Message}"));
+        }
     }
 }
