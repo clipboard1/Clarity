@@ -2,7 +2,9 @@ using Clarity.Api.Extensions;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Clarity.Infrastructure.Authentication;
+using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,9 @@ builder.Services.AddAutoMappers();
 builder.Services.AddApiAuthentication();
 builder.Services.AddApiValidators();
 builder.Services.AddAppValidators();
+
+builder.Services.AddHealthChecks()
+    .AddNpgSql(connectionString!);
 
 var app = builder.Build();
 
@@ -62,5 +67,10 @@ app.UseCors(x =>
 });
 
 app.MapControllers();
+
+app.MapHealthChecks("/health", new HealthCheckOptions
+{
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.Run();
