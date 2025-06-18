@@ -54,7 +54,7 @@ public class TagRepository : ITagRepository
         catch (DbUpdateException ex)
         {
             return Result<int>.Failure(Result.ToDict("General", $"Failed to create tag: " +
-                                                                 $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                 $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -78,7 +78,7 @@ public class TagRepository : ITagRepository
         catch (DbUpdateException ex)
         {
             return Result.Failure(Result.ToDict("General", $"Failed to delete tag: " +
-                                                                 $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                 $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 }

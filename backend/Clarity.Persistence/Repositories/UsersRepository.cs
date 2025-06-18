@@ -43,7 +43,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result.Failure(Result.ToDict("General",$"Failed to create user: " +
-                                                         $"{ex.InnerException.Message ?? ex.Message}"));
+                                                         $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -113,7 +113,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result.Failure(Result.ToDict("General", $"Failed to save token: " +
-                                  $"{ex.InnerException.Message ?? ex.Message}"));
+                                  $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -135,7 +135,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to create token: " +
-                                                                    $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                    $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -150,7 +150,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to create token: " + 
-                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                               $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -169,7 +169,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to delete token: " + 
-                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                               $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -188,7 +188,7 @@ public class UsersRepository : IUsersRepository
         catch (DbUpdateException ex)
         {
             return Result<RefreshTokenEntity>.Failure(Result.ToDict("General", $"Failed to delete token: " + 
-                                                                               $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                               $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 }

@@ -5,7 +5,7 @@ namespace Clarity.Persistence.Entitites;
 public class RefreshTokenEntity
 {
     public Guid Id { get; set; }
-    public string Token { get; set; }
+    public string Token { get; set; } = null!;
     public Guid UserId { get; set; }
     public DateTime ExpiresOnUtc { get; set; }
     

@@ -32,5 +32,5 @@ public class Result<T> : Result
     }
         
     public static Result<T> Success(T value) => new(value, true, null!);
-    public static Result<T> Failure(Dictionary<string, string[]> errors) => new(default!, false, errors);
+    public new static Result<T> Failure(Dictionary<string, string[]> errors) => new(default!, false, errors);
 }

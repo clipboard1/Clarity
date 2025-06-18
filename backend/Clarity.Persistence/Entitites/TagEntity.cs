@@ -3,8 +3,8 @@
 public class TagEntity
 {
     public int Id { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public Guid AppTaskId { get; set; }
     
-    public virtual AppTaskEntity AppTask { get; set; }
+    public virtual AppTaskEntity AppTask { get; set; } = null!;
 }

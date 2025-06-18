@@ -74,7 +74,7 @@ public class AppTasksRepository : IAppTasksRepository
         catch (DbUpdateException ex)
         {
             return Result<Guid>.Failure(Result.ToDict("General", $"Failed to create task: " +
-                                        $"{ex.InnerException.Message ?? ex.Message}"));
+                                        $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -102,7 +102,7 @@ public class AppTasksRepository : IAppTasksRepository
         catch (DbUpdateException ex)
         {
             return Result<Guid>.Failure(Result.ToDict("General", $"Failed to create task: " +
-                                                                 $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                 $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
@@ -126,11 +126,11 @@ public class AppTasksRepository : IAppTasksRepository
         catch (DbUpdateException ex)
         {
             return Result.Failure(Result.ToDict("General", $"Failed to delete task: " +
-                                                                 $"{ex.InnerException.Message ?? ex.Message}"));
+                                                                 $"{ex.InnerException?.Message ?? ex.Message}"));
         }
     }
 
-    public async Task<Result> ChangeStatus(Guid id, int status, CancellationToken cancellationToken = default)
+    public Task<Result> ChangeStatus(Guid id, int status, CancellationToken cancellationToken = default)
     {
         throw new NotImplementedException();
     }
