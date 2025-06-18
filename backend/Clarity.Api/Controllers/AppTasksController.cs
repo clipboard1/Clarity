@@ -2,6 +2,7 @@
 using Clarity.Api.Contracts.AppTasks;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
+using Clarity.Application.AppTasks.ChangeStatus;
 using Clarity.Application.AppTasks.Create;
 using Clarity.Application.AppTasks.Delete;
 using Clarity.Application.AppTasks.GetAll;
@@ -137,5 +138,26 @@ public class AppTasksController: ControllerBase
             return BadRequest(new ValidationProblemDetails(deleteResult.Errors));
         
         return NoContent();
+    }
+    
+    [Authorize]
+    [HttpPut("change-status")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<ActionResult> ChangeTaskStatus(
+        Guid id, int newStatus,
+        CancellationToken cancellationToken = default)
+    {
+        if (id == Guid.Empty)
+            return BadRequest("Task id cannot be empty");
+
+        var updateCommand = new ChangeTaskStatusCommand(id, newStatus);
+        var updateResult = await _commandDispatcher.DispatchAsync<ChangeTaskStatusCommand>(
+            updateCommand, cancellationToken);
+        if (!updateResult.IsSuccess)
+            return BadRequest(new ValidationProblemDetails(updateResult.Errors));
+        
+        return Ok();
     }
 }

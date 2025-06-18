@@ -4,6 +4,7 @@ using Clarity.Api.Validators.Tags;
 using Clarity.Api.Validators.Users;
 using Clarity.Application;
 using Clarity.Application.Abstractions;
+using Clarity.Application.AppTasks.ChangeStatus;
 using Clarity.Application.AppTasks.Create;
 using Clarity.Application.AppTasks.Delete;
 using Clarity.Application.AppTasks.GetAll;
@@ -66,6 +67,7 @@ public static class ServicesExtensions
         services.AddScoped<ICommandHandler<CreateTaskCommand, Guid>, CreateTaskCommandHandler>();
         services.AddScoped<ICommandHandler<UpdateTaskCommand>, UpdateTaskCommandHandler>();
         services.AddScoped<ICommandHandler<DeleteTaskCommand>, DeleteTaskCommandHandler>();
+        services.AddScoped<ICommandHandler<ChangeTaskStatusCommand>, ChangeTaskStatusCommandHandler>();
         services.AddScoped<IQueryHandler<GetAllTasksQuery, List<AppTask>>, GetAllTasksQueryHandler>();
         services.AddScoped<IQueryHandler<GetTaskByIdQuery, AppTask>, GetTaskByIdQueryHandler>();
     }
