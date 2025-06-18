@@ -26,15 +26,6 @@ public class CreateTaskCommandValidator  : AbstractValidator<CreateTaskCommand>
             .WithMessage($"Description must be not empty and smaler than " +
                          $"{AppTask.MAX_DESCRIPTION_LENGTH}" +
                          $"characters");
-        RuleFor(c => c.CreationDate)
-            .NotEmpty()
-            .WithMessage("Creation date cannot be empty");
-        RuleFor(c => c.Deadline)
-            .NotEmpty()
-            .WithMessage("Creation date cannot be empty");
-        RuleFor(c => c.Deadline)
-            .Must(d => d > (DateTime.Now).ToUniversalTime())
-            .WithMessage("Deadline must be in the future");
         RuleFor(x => x.Status)
             .Must(Enum.IsDefined)
             .WithMessage("Deadline must be in the future");

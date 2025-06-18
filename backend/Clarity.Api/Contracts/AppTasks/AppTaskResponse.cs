@@ -7,7 +7,5 @@ public record AppTaskResponse(
     Guid Id,
     string Title,
     string Description,
-    DateTime CreationDate,
-    DateTime Deadline,
     ICollection<TagResponse> Tags,
     AppTaskStatus Status);

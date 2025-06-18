@@ -9,8 +9,6 @@ public record CreateTaskCommand(
     Guid UserId,
     string Title,
     string Description,
-    DateTime CreationDate,
-    DateTime Deadline,
     ICollection<Tag> Tags,
     AppTaskStatus Status)
     : ICommand<Guid>;
@@ -32,8 +30,6 @@ public class CreateTaskCommandHandler : ICommandHandler<CreateTaskCommand, Guid>
             taskCommand.UserId,
             taskCommand.Title,
             taskCommand.Description,
-            taskCommand.CreationDate.ToUniversalTime(),
-            taskCommand.Deadline.ToUniversalTime(),
             taskCommand.Tags,
             taskCommand.Status);
         if  (!createResult.IsSuccess)

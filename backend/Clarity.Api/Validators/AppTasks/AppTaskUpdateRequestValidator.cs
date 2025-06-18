@@ -15,14 +15,6 @@ public class AppTaskUpdateRequestValidator : AbstractValidator<AppTaskUpdateRequ
             .NotEmpty()
             .When(x => x.Description != null)
             .WithMessage("Description cannot be empty if provided");
-        RuleFor(x => x.Deadline)
-            .NotEmpty()
-            .When(x => x.Deadline.HasValue)
-            .WithMessage("Deadline cannot be empty if provided");
-        RuleFor(x => x.Deadline)
-            .Must(d => d > (DateTime.Now).ToUniversalTime())
-            .When(x => x.Deadline.HasValue)
-            .WithMessage("Deadline cannot be in past if provided");
         RuleFor(x => x.Status)
             .IsInEnum()
             .When(x => x.Status.HasValue)

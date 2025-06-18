@@ -21,14 +21,6 @@ public class AppTaskEntityConfiguratiion : IEntityTypeConfiguration<AppTaskEntit
             .Property(t => t.Description)
             .HasMaxLength(AppTask.MAX_DESCRIPTION_LENGTH)
             .IsRequired();
-
-        builder
-            .Property(t => t.CreationDate)
-            .IsRequired();
-        
-        builder
-            .Property(t => t.Deadline)
-            .IsRequired();
         
         builder
             .Property(t => t.Status)

@@ -61,8 +61,6 @@ public class AppTasksRepository : IAppTasksRepository
             Id = task.Id,
             Title = task.Title,
             Description = task.Description,
-            CreationDate = task.CreationDate,
-            Deadline = task.Deadline,
             Status = task.Status,
             UserId = userId
         };
@@ -93,7 +91,6 @@ public class AppTasksRepository : IAppTasksRepository
                 .ExecuteUpdateAsync(s => s
                     .SetProperty(t => t.Title, task.Title)
                     .SetProperty(t => t.Description, task.Description)
-                    .SetProperty(t => t.Deadline, task.Deadline)
                     .SetProperty(t => t.Status, task.Status),
                     cancellationToken);
             

@@ -13,11 +13,5 @@ public class AppTaskCreateRequestValidator : AbstractValidator<AppTaskCreateRequ
         RuleFor(x => x.Description)
             .NotEmpty()
             .WithMessage("Description is required");
-        RuleFor(x => x.Deadline)
-            .NotEmpty()
-            .WithMessage("Deadline is required");
-        RuleFor(x => x.Deadline)
-            .Must(d => d > (DateTime.Now).ToUniversalTime())
-            .WithMessage("Deadline must be in the future");
     }
 }

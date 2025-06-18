@@ -78,8 +78,7 @@ public class AppTasksController: ControllerBase
     {
         var createCommand = new CreateTaskCommand(
             this.GetCurrentUserId(), request.Title,
-            request.Description, DateTime.Now,
-            request.Deadline, [],
+            request.Description, [],
             AppTaskStatus.NotStarted);
         var createResult = await _commandDispatcher.DispatchAsync<CreateTaskCommand, Guid>(
             createCommand,
@@ -108,7 +107,6 @@ public class AppTasksController: ControllerBase
             id, this.GetCurrentUserId(),
             new AppTaskUpdate(request.Title,
                 request.Description,
-                request.Deadline,
                 request.Status));
         var updateResult = await _commandDispatcher.DispatchAsync(
             updateCommand,
