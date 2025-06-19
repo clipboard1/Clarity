@@ -1,4 +1,5 @@
-﻿using Clarity.Persistence;
+﻿using Clarity.Core.Abstractions;
+using Clarity.Persistence;
 using Clarity.Persistence.Entitites;
 
 namespace Clarity.IntegrationsTests;
@@ -6,10 +7,12 @@ namespace Clarity.IntegrationsTests;
 public class DataSeeder
 {
     private readonly ClarityDbContext _context;
+    private readonly IPasswordHasher _passwordHasher;
 
-    public DataSeeder(ClarityDbContext context)
+    public DataSeeder(ClarityDbContext context, IPasswordHasher passwordHasher)
     {
         _context = context;
+        _passwordHasher = passwordHasher;
     }
 
     public async Task<UserEntity> AddUser()
@@ -19,7 +22,7 @@ public class DataSeeder
             Id = Guid.NewGuid(),
             Email = "testuser@example.com",
             Username = "testuser",
-            PasswordHash = "xxxtestpasswordxxx"
+            PasswordHash = _passwordHasher.Generate("xxxtestpasswordxxx")
         };
         await _context.Users.AddAsync(user);
         await _context.SaveChangesAsync();

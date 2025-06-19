@@ -1,4 +1,5 @@
 ﻿using Clarity.Application.Abstractions;
+using Clarity.Core.Abstractions;
 using Clarity.Persistence;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppF
     protected readonly ClarityDbContext DbContext;
     protected readonly ICommandDispatcher CommandDispatcher;
     protected readonly IQueryDispatcher QueryDispatcher;
+    protected readonly IPasswordHasher PasswordHasher;
     protected readonly DataSeeder DataSeeder;
 
     protected BaseIntegrationTest(IntegrationTestWebAppFactory factory)
@@ -18,6 +20,7 @@ public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppF
         CommandDispatcher = _scope.ServiceProvider.GetRequiredService<ICommandDispatcher>();
         QueryDispatcher = _scope.ServiceProvider.GetRequiredService<IQueryDispatcher>();
         DbContext = _scope.ServiceProvider.GetRequiredService<ClarityDbContext>();
-        DataSeeder = new DataSeeder(DbContext);
+        PasswordHasher = _scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+        DataSeeder = new DataSeeder(DbContext, PasswordHasher);
     }
 }
