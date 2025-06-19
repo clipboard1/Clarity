@@ -3,12 +3,12 @@ using Clarity.Core.Enums;
 
 namespace Clarity.IntegrationsTests.Application.AppTasks;
 
-public class ChangeStatusCommandTests: BaseIntegrationTest
+public class ChangeTaskStatusCommandTests: BaseIntegrationTest
 {
     private const int ValidStatus = (int)AppTaskStatus.Done;
     private const int InvalidStatus = 999;
     
-    public ChangeStatusCommandTests(IntegrationTestWebAppFactory factory) : base(factory) {}
+    public ChangeTaskStatusCommandTests(IntegrationTestWebAppFactory factory) : base(factory) {}
 
     [Fact]
     public async Task ChangeTaskStatus_WithValidStatus_ChangesStatus()

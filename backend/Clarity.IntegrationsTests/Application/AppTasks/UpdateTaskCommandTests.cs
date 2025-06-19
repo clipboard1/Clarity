@@ -4,12 +4,12 @@ using Clarity.Core.Models;
 
 namespace Clarity.IntegrationsTests.Application.AppTasks;
 
-public class UpdateCommandTests : BaseIntegrationTest
+public class UpdateTaskCommandTests : BaseIntegrationTest
 {
     private const string UpdatedTitle = "Updated title";
     private const string UpdatedDescription = "Updated description";
     
-    public UpdateCommandTests(IntegrationTestWebAppFactory factory) : base(factory){}
+    public UpdateTaskCommandTests(IntegrationTestWebAppFactory factory) : base(factory){}
     
     [Fact]
     public async Task UpdateTask_WithValidData_UpdatesTask()

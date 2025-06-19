@@ -3,9 +3,9 @@ using Clarity.Core.Models;
 
 namespace Clarity.IntegrationsTests.Application.AppTasks;
 
-public class GetAllQueryTests : BaseIntegrationTest
+public class GetAllTasksQueryTests : BaseIntegrationTest
 {
-    public GetAllQueryTests(IntegrationTestWebAppFactory factory) : base(factory){}
+    public GetAllTasksQueryTests(IntegrationTestWebAppFactory factory) : base(factory){}
 
     [Fact]
     public async Task GetAllTasks_WithValidUserId_ReturnsTaskList()

@@ -2,10 +2,10 @@
 
 namespace Clarity.IntegrationsTests.Application.AppTasks;
 
-public class DeleteCommandTests : BaseIntegrationTest
+public class DeleteTaskCommandTests : BaseIntegrationTest
 {
     
-    public DeleteCommandTests(IntegrationTestWebAppFactory factory) : base(factory){}
+    public DeleteTaskCommandTests(IntegrationTestWebAppFactory factory) : base(factory){}
 
     [Fact]
     public async Task DeleteTask_WithValidData_DeletesTask()
