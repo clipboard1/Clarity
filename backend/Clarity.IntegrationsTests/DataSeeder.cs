@@ -44,4 +44,34 @@ public class DataSeeder
 
         return task;
     }
+
+    public async Task<TagEntity> AddTag()
+    {
+        var task = await AddTask();
+
+        var tag = new TagEntity
+        {
+            AppTaskId = task.Id,
+            Name = "Some name"
+        };
+
+        await _context.Tags.AddAsync(tag);
+        await _context.SaveChangesAsync();
+
+        return tag;
+    }
+    
+    public async Task<TagEntity> AddTag(Guid taskId)
+    { 
+        var tag = new TagEntity
+        {
+            AppTaskId = taskId,
+            Name = "Some name"
+        };
+
+        await _context.Tags.AddAsync(tag);
+        await _context.SaveChangesAsync();
+
+        return tag;
+    }
 }
