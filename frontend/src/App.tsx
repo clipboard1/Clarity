@@ -1,21 +1,19 @@
-import Task from "./components/Task.tsx";
-import Tag from "./components/Tag.tsx";
+import Kanban from "./components/Kanban.tsx";
 
 function App() {
 
   return (
-    <>
-    <Task
-      name="sigma task"
-      onDelete={() => console.log("Deleting task")}
-      onDragStart={() => console.log("Dragging task")}
+    <div className="flex items-center justify-center flex-col
+      gap-3 w-full max-w-6xl"
     >
-      <Tag
-        name="sigma tag"
-        onDelete={() => console.log("Deleting tag")}
-      />
-    </Task>
-    </>
+      <h1 className="text-6xl font-bold text-zinc-200">
+        Clarity
+      </h1>
+      <h2 className="text-zinc-300">
+        Task manager which you want to use...
+      </h2>
+      <Kanban/>
+    </div>
   )
 }
 
