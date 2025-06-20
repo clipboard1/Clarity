@@ -3,7 +3,7 @@ import type {TagProps} from "../models/TagProps.ts";
 const Tag = ({name, onDelete} : TagProps) => {
 
   return (
-    <div className="border rounded-xl px-2 py-1 text-sm
+    <div className="border rounded-xl px-2 py-1 gap-x-2 text-sm
     bg-zinc-200 text-zinc-600 flex justify-between items-center">
       <span>{name}</span>
       <button

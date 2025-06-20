@@ -1,5 +1,5 @@
 export interface TaskProps {
-  name: string;
+  title: string;
   children: React.ReactNode;
   onDelete: () => void;
   onDragStart: () => void;
