@@ -1,5 +1,5 @@
 import Column from "./Column.tsx";
-import type {TaskModel} from "../models/TaskModel.ts";
+import type {TaskModel} from "../contracts/TaskModel.ts";
 import Task from "./Task.tsx"
 import Tag from "./Tag.tsx"
 import { useState } from "react";
