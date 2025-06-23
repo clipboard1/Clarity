@@ -20,6 +20,16 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
+const string corsPolicyName = "_myCorsPolicy";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsPolicyName, builder =>
+        builder
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 builder.Services.AddControllers();
 builder.Services.AddInfrastructure();
 builder.Services.AddRepositories();
@@ -59,12 +69,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(x => 
-{
-    x.WithHeaders().AllowAnyHeader();
-    x.AllowAnyMethod();
-    x.AllowCredentials();
-});
+app.UseCors(corsPolicyName);
 
 app.MapControllers();
 
