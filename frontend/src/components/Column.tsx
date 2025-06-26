@@ -1,6 +1,10 @@
 import type {ColumnProps} from "../models/ColumnProps.ts";
 
-const Column = ({name, children, onDragOver, onDrop} : ColumnProps) => {
+const Column = ({
+                  name, children,
+                  onOpenCreate, onDragOver,
+                  onDrop,}
+                : ColumnProps) => {
   return (
     <div key="name" className="flex-shrink-0 w-auto bg-black rounded-3xl
           min-w-85 shadow-xl"
@@ -14,6 +18,7 @@ const Column = ({name, children, onDragOver, onDrop} : ColumnProps) => {
       </div>
       <div className="p-3 max-h-[80vh] overflow-y-auto">
           {children}
+        <div className="flex flex-col">
           <button
             className="
                   text-zinc-200
@@ -22,8 +27,10 @@ const Column = ({name, children, onDragOver, onDrop} : ColumnProps) => {
                   rounded-full
                   flex
                   hover:border hover:border-zinc-200"
+                  onClick={onOpenCreate}
           > + Add task
           </button>
+        </div>
       </div>
     </div>
   )
