@@ -1,6 +1,14 @@
 import Kanban from "./components/Kanban.tsx";
+import Authentication from "./components/Authentication.tsx";
+import {useEffect, useState} from "react";
 
 function App() {
+
+  const [hasAuthToken, setHasAuthToken] = useState(false);
+
+  useEffect(() => {
+    setHasAuthToken(false);
+  }, []);
 
   return (
     <div className="flex items-center justify-center flex-col
@@ -12,7 +20,10 @@ function App() {
       <h2 className="text-zinc-300">
         Task manager which you want to use...
       </h2>
-      <Kanban/>
+      {hasAuthToken ? <Kanban/>
+      : <Authentication
+          fallbackFunc={() => setHasAuthToken(true)}
+        />}
     </div>
   )
 }
