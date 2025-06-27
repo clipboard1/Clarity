@@ -148,13 +148,13 @@ public class AppTasksController: ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> ChangeTaskStatus(
-        Guid id, int newStatus,
+        AppTasksChangeStatusRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (id == Guid.Empty)
+        if (request.AppTaskId == Guid.Empty)
             return BadRequest("Task id cannot be empty");
 
-        var updateCommand = new ChangeTaskStatusCommand(id, newStatus);
+        var updateCommand = new ChangeTaskStatusCommand(request.AppTaskId, request.NewStatus);
         var updateResult = await _commandDispatcher.DispatchAsync<ChangeTaskStatusCommand>(
             updateCommand, cancellationToken);
         if (!updateResult.IsSuccess)
