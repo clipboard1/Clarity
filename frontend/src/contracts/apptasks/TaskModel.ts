@@ -1,4 +1,4 @@
-import type {TagModel} from "./TagModel.ts";
+import type {TagModel} from "../tags/TagModel.ts";
 
 export interface TaskModel {
   id: string;
