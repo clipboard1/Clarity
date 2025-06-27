@@ -1,7 +1,7 @@
 import {type ChangeEvent, type FormEvent, useState} from "react";
-import type {TagModel} from "../contracts/TagModel.ts";
+import type {TagModel} from "../contracts/tags/TagModel.ts";
 import {ModalMode} from "../models/ModalMode.ts";
-import type {TaskModel} from "../contracts/TaskModel.ts";
+import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
 
 export const useTags = (tasks: TaskModel[],
                         setTasks: (tasks: TaskModel[]) => void,

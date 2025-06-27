@@ -1,5 +1,5 @@
 import {type ChangeEvent, type FormEvent, useState} from "react";
-import type {TaskModel} from "../contracts/TaskModel.ts";
+import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
 import {ModalMode} from "../models/ModalMode.ts";
 
 export const useTasks = (setModalMode: (mode: ModalMode) => void,

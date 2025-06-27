@@ -1,4 +1,4 @@
-import type {TaskModel} from "../contracts/TaskModel.ts";
+import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
 import type {FormProps} from "./FormProps.ts";
 
 export interface TaskFormProps extends FormProps{
