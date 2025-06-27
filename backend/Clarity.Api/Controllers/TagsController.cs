@@ -34,7 +34,7 @@ public class TagsController : ControllerBase
     [ProducesResponseType(typeof(List<TagResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult<TagResponse>> GetTags(Guid appTaskId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<List<TagResponse>>> GetTags(Guid appTaskId, CancellationToken cancellationToken = default)
     {
         var getAllQuery = new GetAllTagsByTaskQuery(appTaskId, this.GetCurrentUserId());
         var getResult = await _queryDispatcher.DispatchAsync<GetAllTagsByTaskQuery, List<Tag>>(
