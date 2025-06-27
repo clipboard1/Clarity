@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Clarity.Api.Contracts.AppTasks;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
@@ -17,7 +18,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Clarity.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class AppTasksController: ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
@@ -91,7 +93,7 @@ public class AppTasksController: ControllerBase
     }
 
     [Authorize]
-    [HttpPut]
+    [HttpPatch]
     [ValidateModel<AppTaskUpdateRequest>]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]

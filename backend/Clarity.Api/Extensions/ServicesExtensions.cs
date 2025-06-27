@@ -1,4 +1,5 @@
-﻿using Clarity.Api.Mappings;
+﻿using Asp.Versioning;
+using Clarity.Api.Mappings;
 using Clarity.Api.Validators.AppTasks;
 using Clarity.Api.Validators.Tags;
 using Clarity.Api.Validators.Users;
@@ -113,5 +114,21 @@ public static class ServicesExtensions
         services.AddValidatorsFromAssemblyContaining<CreateTagCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<DeleteTagCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<GetAllTagsByTaskQueryValidator>();
+    }
+
+    public static void AddVersioning(this IServiceCollection services)
+    {
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1);
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = new UrlSegmentApiVersionReader();
+        })
+        .AddMvc()
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'V";
+            options.SubstituteApiVersionInUrl = true;
+        });
     }
 }

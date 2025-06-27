@@ -16,10 +16,11 @@ public class SecureJwtMiddleware
 
     public async Task InvokeAsync(HttpContext context)
     {
-        var token = context.Request.Cookies[_options.AuthCookieName];
+        var authToken = context.Request.Cookies[_options.AuthCookieName];
 
-        if (!string.IsNullOrEmpty(token))
-            context.Request.Headers.Append("Authorization", $"Bearer {token}");
+        
+        if (!string.IsNullOrEmpty(authToken))
+            context.Request.Headers.Append("Authorization", $"Bearer {authToken}");
         
         context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
         context.Response.Headers.Append("X-Xss-Protection", "1");

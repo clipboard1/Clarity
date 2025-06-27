@@ -1,4 +1,6 @@
+using Asp.Versioning.ApiExplorer;
 using Clarity.Api.Extensions;
+using Clarity.Api.OpenApi;
 using Clarity.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Clarity.Infrastructure.Authentication;
@@ -20,28 +22,39 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
+string? frontendUrl = builder.Configuration["FrontEndUrl"]; 
 const string corsPolicyName = "_myCorsPolicy";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: corsPolicyName, builder =>
-        builder
-            .WithOrigins("https://localhost:5173")
+    options.AddPolicy(name: corsPolicyName, corsPolicyBuilder =>
+        corsPolicyBuilder
+            .WithOrigins(frontendUrl!)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials());
 });
 
 builder.Services.AddControllers();
+
 builder.Services.AddInfrastructure();
+
 builder.Services.AddRepositories();
+
 builder.Services.AddDispatchers();
+
 builder.Services.AddAuthCommands();
 builder.Services.AddAppTaskCommandsAndQueries();
 builder.Services.AddTagCommandsAndQueries();
 builder.Services.AddAutoMappers();
+
 builder.Services.AddApiAuthentication();
+
 builder.Services.AddApiValidators();
 builder.Services.AddAppValidators();
+
+builder.Services.AddVersioning();
+
+builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 
 builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString!);
@@ -53,7 +66,18 @@ app.MigrateDb();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+
+        foreach (ApiVersionDescription description in descriptions)
+        {
+            string url = $"/swagger/{description.GroupName}/swagger.json";
+            string name = description.GroupName.ToUpperInvariant();
+            
+            options.SwaggerEndpoint(url, name);
+        }
+    });
 }
 
 app.UseCookiePolicy(new CookiePolicyOptions

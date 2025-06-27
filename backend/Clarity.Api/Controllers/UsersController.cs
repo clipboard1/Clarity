@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Asp.Versioning;
 using Clarity.Api.Contracts.Users;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
@@ -19,7 +20,8 @@ namespace Clarity.Api.Controllers;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class UsersController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
@@ -88,10 +90,14 @@ public class UsersController : ControllerBase
     [HttpPost("login-refresh")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> LoginByRefreshToken(string token,
-        CancellationToken cancellationToken = default)
+    public async Task<IActionResult> LoginByRefreshToken(CancellationToken cancellationToken = default)
     {
-        var logCommand = new LoginByRefreshTokenCommand(Uri.UnescapeDataString(token));
+        var refreshToken = HttpContext.Request.Cookies[_options.RefreshCookieName];
+        if (string.IsNullOrEmpty(refreshToken))
+            return BadRequest(new ValidationProblemDetails(
+                Result.ToDict("RefreshToken", "No token provided")));
+        
+        var logCommand = new LoginByRefreshTokenCommand(Uri.UnescapeDataString(refreshToken));
 
         var loginResult = await _commandDispatcher.DispatchAsync<LoginByRefreshTokenCommand, AuthTokens>(
             logCommand,

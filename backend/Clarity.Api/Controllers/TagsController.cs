@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Asp.Versioning;
+using AutoMapper;
 using Clarity.Api.Contracts.Tags;
 using Clarity.Api.Extensions;
 using Clarity.Application.Abstractions;
@@ -13,7 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Clarity.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v{version:apiVersion}/[controller]")]
+[ApiVersion("1.0")]
 public class TagsController : ControllerBase
 {
     private readonly ICommandDispatcher _commandDispatcher;
