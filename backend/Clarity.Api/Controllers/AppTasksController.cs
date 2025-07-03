@@ -81,8 +81,8 @@ public class AppTasksController: ControllerBase
     {
         var createCommand = new CreateTaskCommand(
             this.GetCurrentUserId(), request.Title,
-            request.Description, [],
-            AppTaskStatus.NotStarted);
+            request.Description, [], 
+            request.Status);
         var createResult = await _commandDispatcher.DispatchAsync<CreateTaskCommand, Guid>(
             createCommand,
             cancellationToken);
@@ -99,15 +99,14 @@ public class AppTasksController: ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult> UpdateTask(
-        Guid id,
         AppTaskUpdateRequest request,
         CancellationToken cancellationToken = default)
     {
-        if (id == Guid.Empty)
+        if (request.Id == Guid.Empty)
             return BadRequest("Task id cannot be empty");
 
         var updateCommand = new UpdateTaskCommand(
-            id, this.GetCurrentUserId(),
+            request.Id, this.GetCurrentUserId(),
             new AppTaskUpdate(request.Title,
                 request.Description,
                 request.Status));
@@ -122,11 +121,12 @@ public class AppTasksController: ControllerBase
     }
 
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<ActionResult> DeleteTask(Guid id,
+    public async Task<ActionResult> DeleteTask(
+        Guid id,
         CancellationToken cancellationToken = default)
     {
         if (id == Guid.Empty)

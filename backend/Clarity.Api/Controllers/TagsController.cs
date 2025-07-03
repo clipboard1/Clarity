@@ -67,7 +67,7 @@ public class TagsController : ControllerBase
     }
     
     [Authorize]
-    [HttpDelete]
+    [HttpDelete("{id:int}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
