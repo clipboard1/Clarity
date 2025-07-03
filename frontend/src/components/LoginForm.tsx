@@ -22,7 +22,6 @@ const LoginForm = ({ onSubmit, onInputChange, onSwitchToRegister }) => {
             className="border border-zinc-500 bg-black text-sm rounded-xl
                      focus:ring-emerald-400/50 focus:border-emerald-400 block w-full px-4 py-2.5
                      placeholder:text-zinc-500 text-zinc-300"
-            value="admin@example.com"
           />
         </div>
 
@@ -39,7 +38,6 @@ const LoginForm = ({ onSubmit, onInputChange, onSwitchToRegister }) => {
             className="border border-zinc-500 bg-black text-sm rounded-xl
                      focus:ring-emerald-400/50 focus:border-emerald-400 block w-full px-4 py-2.5
                      placeholder:text-zinc-500 text-zinc-300"
-            value="string"
           />
         </div>
       </div>

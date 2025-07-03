@@ -1,25 +1,12 @@
 import Modal from "./Modal.tsx";
 import LoginForm from "./LoginForm.tsx";
 import {type ChangeEvent, type FormEvent, useState} from "react";
-import type {LoginUserRequest} from "../contracts/LoginUserRequest.ts";
 import RegisterForm from "./RegisterForm.tsx";
+import type {AuthenticationProps} from "../models/AuthenticationProps.ts";
 
-const Authentication = ({fallbackFunc}) => {
-  const [authData, setAuthData] =
-    useState<LoginUserRequest>({email: "", password: ""});
-
+const Authentication = ({onLoginInputChange, onLogin, onRegisterInputChange, onRegister}
+                        : AuthenticationProps) => {
   const [mode, setMode] = useState<'login' | 'register'>('login');
-
-  const onInputChange =
-    (event:ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setAuthData((prev) => ({ ...prev, [name]: value }));
-    };
-
-  const onLogin = (e : FormEvent)=> {
-    e.preventDefault()
-    fallbackFunc();
-  }
 
   return (
     <Modal
@@ -32,13 +19,13 @@ const Authentication = ({fallbackFunc}) => {
     >
       {mode === "login"
       ? <LoginForm
-          onInputChange={onInputChange}
-          onSubmit={onLogin}
+          onInputChange={(e :ChangeEvent<HTMLInputElement>) => onLoginInputChange(e)}
+          onSubmit={(e: FormEvent) => onLogin(e)}
           onSwitchToRegister={() => setMode("register")}
         />
       : <RegisterForm
-          onSubmit={() => {}}
-          onInputChange={() => {}}
+          onSubmit={(e: FormEvent) => onRegister(e)}
+          onInputChange={(e :ChangeEvent<HTMLInputElement>) => onRegisterInputChange(e)}
           onSwitchToLogin={() => setMode("login")}
         />}
 
