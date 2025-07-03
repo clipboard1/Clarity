@@ -4,6 +4,6 @@ export interface TaskModel {
   id: string;
   title: string;
   description: string;
-  tags: Array<TagModel>;
+  tags: TagModel[];
   status: number;
 }
