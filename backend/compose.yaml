@@ -2,12 +2,19 @@
   clarity.api:
     image: clarity.api
     environment:
-      - ConnectionStrings__ClarityDbContext
+      - ConnectionStrings__ClarityDbContext=${ConnectionStrings__ClarityDbContext}
+      - JwtOptions__SecretKey=${JwtOptions__SecretKey}
+      - JwtOptions__Issuer=${JwtOptions__Issuer}
+      - JwtOptions__Audience=${JwtOptions__Audience}
+      - JwtOptions__ExpiresMinutes=${JwtOptions__ExpiresMinutes}
+      - JwtOptions__AuthCookieName=${JwtOptions__AuthCookieName}
+      - JwtOptions__RefreshCookieName=${JwtOptions__RefreshCookieName}
+      - FrontendUrl=${FrontendUrl}
     build:
       context: .
       dockerfile: Clarity.Api/Dockerfile
     ports:
-      - "8080:8080"
+      - "333:8080"
     depends_on:
       clarity.db:
         condition: service_healthy
@@ -20,7 +27,7 @@
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
     ports:
-      - "5432:5432"
+      - "5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     healthcheck:
