@@ -1,10 +1,10 @@
-import Kanban from "./components/Kanban.tsx";
-import Authentication from "./components/Authentication.tsx";
+import Kanban from "./components/kanban/Kanban.tsx";
+import Authentication from "./components/users/Authentication.tsx";
 import useAuthentication from "./hooks/useAuthentication.ts";
 import {useState} from "react";
-import type {NotificationProps} from "./models/NotificationProps.ts";
-import Notification from "./components/Notification.tsx";
-import type {ApiError} from "./models/ApiError.ts";
+import type {NotificationProps} from "./models/notifications/NotificationProps.ts";
+import Notification from "./components/notifications/Notification.tsx";
+import type {ApiError} from "./models/notifications/ApiError.ts";
 
 function App() {
 

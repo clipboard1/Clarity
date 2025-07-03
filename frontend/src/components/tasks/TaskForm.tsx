@@ -1,4 +1,4 @@
-import type { TaskFormProps } from "../models/TaskFormProps.ts"
+import type { TaskFormProps } from "../../models/tasks/TaskFormProps.ts"
 
 const TaskForm = ({isEditing, task, onInputChange, onSubmit}: TaskFormProps) => {
   return (<form onSubmit={onSubmit}>

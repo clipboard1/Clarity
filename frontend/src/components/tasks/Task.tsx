@@ -1,4 +1,4 @@
-import type {TaskProps} from "../models/TaskProps.ts";
+import type {TaskProps} from "../../models/tasks/TaskProps.ts";
 
 const Task =
   ({title, children, onDelete, onDragStart, onEdit, onTagCreate}

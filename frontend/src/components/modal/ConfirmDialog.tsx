@@ -1,4 +1,4 @@
-import type { ConfirmDialogProps } from "../models/ConfirmDialogProps"
+import type { ConfirmDialogProps } from "../../models/modal/ConfirmDialogProps.ts"
 
 const ConfirmDialog = ({message, title, onConfirm, onCancel}: ConfirmDialogProps) => {
   return(

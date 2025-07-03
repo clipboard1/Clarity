@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { NotificationProps } from "../models/NotificationProps";
+import type { NotificationProps } from "../../models/notifications/NotificationProps.ts";
 
 const Notification = ({isError, status, message, onClose } : NotificationProps) => {
   const [visible, setVisible] = useState(false);

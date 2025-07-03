@@ -1,16 +1,16 @@
 import Column from "./Column.tsx";
-import Task from "./Task.tsx"
-import Tag from "./Tag.tsx"
-import Modal from "./Modal.tsx";
-import TaskForm from "./TaskForm.tsx"
+import Task from "../tasks/Task.tsx"
+import Tag from "../tags/Tag.tsx"
+import Modal from "../modal/Modal.tsx";
+import TaskForm from "../tasks/TaskForm.tsx"
 import {type FormEvent, useEffect} from "react";
-import {ModalMode} from "../models/ModalMode.ts";
-import ConfirmDialog from "./ConfirmDialog.tsx";
-import TagForm from "./TagForm.tsx";
-import {useTasks} from "../hooks/useTasks.ts";
-import {useTags} from "../hooks/useTags.ts";
-import {useModal} from "../hooks/useModal.ts";
-import type {KanbanProps} from "../models/KanbanProps.ts";
+import {ModalMode} from "../../models/modal/ModalMode.ts";
+import ConfirmDialog from "../modal/ConfirmDialog.tsx";
+import TagForm from "../tags/TagForm.tsx";
+import {useTasks} from "../../hooks/useTasks.ts";
+import {useTags} from "../../hooks/useTags.ts";
+import {useModal} from "../../hooks/useModal.ts";
+import type {KanbanProps} from "../../models/kanban/KanbanProps.ts";
 
 const Kanban =
   ({setError}: KanbanProps) => {

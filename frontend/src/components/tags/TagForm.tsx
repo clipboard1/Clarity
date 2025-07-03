@@ -1,4 +1,4 @@
-import type {FormProps} from "../models/FormProps.ts";
+import type {FormProps} from "../../models/modal/FormProps.ts";
 
 const TaskForm = ({onInputChange, onSubmit}: FormProps) => {
   return (<form onSubmit={onSubmit}>

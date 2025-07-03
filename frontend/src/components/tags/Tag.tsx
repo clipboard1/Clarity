@@ -1,4 +1,4 @@
-import type {TagProps} from "../models/TagProps.ts";
+import type {TagProps} from "../../models/tags/TagProps.ts";
 
 const Tag = ({name, onDelete} : TagProps) => {
 

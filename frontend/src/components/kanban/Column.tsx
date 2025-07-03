@@ -1,4 +1,4 @@
-import type {ColumnProps} from "../models/ColumnProps.ts";
+import type {ColumnProps} from "../../models/kanban/ColumnProps.ts";
 
 const Column = ({
                   name, children,

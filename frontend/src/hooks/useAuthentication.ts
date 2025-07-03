@@ -2,7 +2,7 @@ import {type ChangeEvent, type FormEvent, useEffect, useState} from "react";
 import {UsersService} from "../services/UsersService.ts";
 import type {LoginUserRequest} from "../contracts/users/LoginUserRequest.ts";
 import type {RegisterUserRequest} from "../contracts/users/RegisterUserRequest.ts";
-import type {ApiError} from "../models/ApiError.ts";
+import type {ApiError} from "../models/notifications/ApiError.ts";
 
 const useAuthentication =
   (setError: (e: ApiError) => void) => {

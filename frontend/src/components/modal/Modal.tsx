@@ -1,4 +1,4 @@
-import type {ModalProps} from "../models/ModalProps.ts";
+import type {ModalProps} from "../../models/modal/ModalProps.ts";
 
 const Modal  = ({ isOpen, onClose, header, children }: ModalProps) => {
   return (

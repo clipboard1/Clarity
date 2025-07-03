@@ -1,11 +1,11 @@
 import {type ChangeEvent, type FormEvent, useState} from "react";
 import type {TagModel} from "../contracts/tags/TagModel.ts";
-import {ModalMode} from "../models/ModalMode.ts";
+import {ModalMode} from "../models/modal/ModalMode.ts";
 import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
 import {TagsService} from "../services/TagsService.ts";
 import type {TagCreateRequest} from "../contracts/tags/TagCreateRequest.ts";
-import type {ApiError} from "../models/ApiError.ts";
-import loginForm from "../components/LoginForm.tsx";
+import type {ApiError} from "../models/notifications/ApiError.ts";
+import loginForm from "../components/users/LoginForm.tsx";
 
 export const useTags =
   (tasks: TaskModel[],

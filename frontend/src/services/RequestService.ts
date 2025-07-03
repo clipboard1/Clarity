@@ -1,4 +1,4 @@
-import type {ApiError} from "../models/ApiError";
+import type {ApiError} from "../models/notifications/ApiError.ts";
 
 const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
 

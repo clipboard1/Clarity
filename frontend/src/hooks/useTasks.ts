@@ -1,11 +1,11 @@
 import {type ChangeEvent, type FormEvent, useEffect, useState} from "react";
 import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
-import {ModalMode} from "../models/ModalMode.ts";
+import {ModalMode} from "../models/modal/ModalMode.ts";
 import {TasksService} from "../services/TasksService.ts";
 import type {
   TaskChangeStatusRequest
 } from "../contracts/apptasks/TaskChangeStatusRequest.ts";
-import type {ApiError} from "../models/ApiError.ts";
+import type {ApiError} from "../models/notifications/ApiError.ts";
 
 export const useTasks =
   (setModalMode: (mode: ModalMode) => void,

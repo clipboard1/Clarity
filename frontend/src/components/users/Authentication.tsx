@@ -1,8 +1,8 @@
-import Modal from "./Modal.tsx";
+import Modal from "../modal/Modal.tsx";
 import LoginForm from "./LoginForm.tsx";
 import {type ChangeEvent, type FormEvent, useState} from "react";
 import RegisterForm from "./RegisterForm.tsx";
-import type {AuthenticationProps} from "../models/AuthenticationProps.ts";
+import type {AuthenticationProps} from "../../models/users/AuthenticationProps.ts";
 
 const Authentication = ({onLoginInputChange, onLogin, onRegisterInputChange, onRegister}
                         : AuthenticationProps) => {
