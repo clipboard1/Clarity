@@ -2,18 +2,18 @@ import Column from "./Column.tsx";
 import Task from "./Task.tsx"
 import Tag from "./Tag.tsx"
 import Modal from "./Modal.tsx";
-import Notification from "./Notification.tsx";
 import TaskForm from "./TaskForm.tsx"
-import {type FormEvent, useEffect, useState} from "react";
+import {type FormEvent, useEffect} from "react";
 import {ModalMode} from "../models/ModalMode.ts";
-import type {NotificationProps} from "../models/NotificationProps.ts";
 import ConfirmDialog from "./ConfirmDialog.tsx";
 import TagForm from "./TagForm.tsx";
 import {useTasks} from "../hooks/useTasks.ts";
 import {useTags} from "../hooks/useTags.ts";
 import {useModal} from "../hooks/useModal.ts";
+import type {KanbanProps} from "../models/KanbanProps.ts";
 
-const Kanban = () => {
+const Kanban =
+  ({setError}: KanbanProps) => {
 
   const {
     modalMode,
@@ -39,7 +39,7 @@ const Kanban = () => {
     onDragStart,
     onDragOver,
     onDrop
-  } = useTasks(setModalMode, isEmpty)
+  } = useTasks(setModalMode, setError, isEmpty)
 
   const {
     selectedTag,
@@ -48,10 +48,9 @@ const Kanban = () => {
     onTagCreate,
     onTagDelete,
     onTagDeleteConfirm
-  } = useTags(tasks, setTasks, setModalMode);
+  } = useTags(tasks, setTasks, setModalMode, setError);
 
-  const [notification, setNotification] =
-    useState<NotificationProps | null>(null);
+
 
   useEffect(() => {
     resetModalStates();
@@ -136,7 +135,7 @@ const Kanban = () => {
           name="ToDo"
           onDragOver={(e) => onDragOver(e)}
           onDrop={(e) => onDrop(e, 0)}
-          onOpenCreate={onTaskOpenCreateModal}
+          onOpenCreate={() => onTaskOpenCreateModal(0)}
         >
           {getTasksForColumn(0)}
         </Column>
@@ -144,7 +143,7 @@ const Kanban = () => {
           name="In progress"
           onDragOver={(e) => onDragOver(e)}
           onDrop={(e) => onDrop(e, 1)}
-          onOpenCreate={onTaskOpenCreateModal}
+          onOpenCreate={() => onTaskOpenCreateModal(1)}
         >
           {getTasksForColumn(1)}
         </Column>
@@ -152,7 +151,7 @@ const Kanban = () => {
           name="Done"
           onDragOver={(e) => onDragOver(e)}
           onDrop={(e) => onDrop(e, 2)}
-          onOpenCreate={onTaskOpenCreateModal}
+          onOpenCreate={() => onTaskOpenCreateModal(2)}
         >
           {getTasksForColumn(2)}
         </Column>
@@ -165,13 +164,6 @@ const Kanban = () => {
       >
         {renderModalContent()}
       </Modal>
-      {notification &&
-        <Notification
-          isError={notification.isError}
-          status={notification.status}
-          message={notification.message}
-          onClose={() => (setNotification(null))}
-        />}
     </>
   )
 }
