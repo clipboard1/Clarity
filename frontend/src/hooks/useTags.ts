@@ -2,10 +2,19 @@ import {type ChangeEvent, type FormEvent, useState} from "react";
 import type {TagModel} from "../contracts/tags/TagModel.ts";
 import {ModalMode} from "../models/ModalMode.ts";
 import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
+import {TagsService} from "../services/TagsService.ts";
+import type {TagCreateRequest} from "../contracts/tags/TagCreateRequest.ts";
+import type {ApiError} from "../models/ApiError.ts";
+import loginForm from "../components/LoginForm.tsx";
 
-export const useTags = (tasks: TaskModel[],
-                        setTasks: (tasks: TaskModel[]) => void,
-                        setModalMode: (mode: ModalMode) => void) => {
+export const useTags =
+  (tasks: TaskModel[],
+   setTasks: (tasks: TaskModel[]) => void,
+   setModalMode: (mode: ModalMode) => void,
+   setError: (e: ApiError) => void) => {
+
+  const tagsService = new TagsService();
+
   const [selectedTag, setSelectedTag] = useState<TagModel>({
     id: 0, name: "", taskId: ""
   })
@@ -31,25 +40,50 @@ export const useTags = (tasks: TaskModel[],
 
   const onCreate = (e: FormEvent) => {
     e.preventDefault();
-    setSelectedTag(prevTag => ({
-      ...prevTag,
-      id: Math.floor(Math.random())
-    }));
-    console.log(selectedTag)
+    const tempId = Math.floor(Math.random() * 1000);
 
-    if (!selectedTag) return;
+    const newTag = {
+      ...selectedTag,
+      id: tempId
+    };
 
     setTasks(prevTasks =>
       prevTasks.map(task =>
         task.id === selectedTag.taskId
           ? {
             ...task,
-            tags: [...task.tags, selectedTag]
+            tags: [...task.tags, newTag]
           }
           : task
       )
     );
-    console.log(tasks)
+
+    if (!selectedTag) return;
+
+    tagsService.createTag({
+      name: selectedTag.name,
+      apptaskId: selectedTag.taskId
+    } as TagCreateRequest)
+      .then((createdTagId) => {
+        console.log(createdTagId)
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.id === selectedTag.taskId
+              ? {
+                ...task,
+                tags: task.tags.map(tag =>
+                  tag.id === tempId
+                    ? { ...tag, ...createdTagId }
+                    : tag
+                )
+              }
+              : task
+          )
+        );
+      })
+      .catch(e => {
+        setError(e)
+      });
   }
 
   const onDelete = (taskId?: string, id?: number) => {
@@ -64,13 +98,19 @@ export const useTags = (tasks: TaskModel[],
   };
 
   const onDeleteConfirm = (id: number) => {
-    setTasks(prevTasks =>
-      prevTasks.map(task =>
-        task.tags.some(tag => tag.id === id)
-      ? {...task, tags: task.tags.filter(tag => tag.id !== id)}
-        : task
+    tagsService.deleteTag(id)
+      .then(() =>
+        setTasks(prevTasks =>
+          prevTasks.map(task =>
+            task.tags.some(tag => tag.id === id)
+              ? {...task, tags: task.tags.filter(tag => tag.id !== id)}
+              : task
+          ))
       )
-    )
+      .catch(e => {
+      setError(e)
+    });
+
   }
 
   return {

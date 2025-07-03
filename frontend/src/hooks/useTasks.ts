@@ -1,29 +1,30 @@
-import {type ChangeEvent, type FormEvent, useState} from "react";
+import {type ChangeEvent, type FormEvent, useEffect, useState} from "react";
 import type {TaskModel} from "../contracts/apptasks/TaskModel.ts";
 import {ModalMode} from "../models/ModalMode.ts";
+import {TasksService} from "../services/TasksService.ts";
+import type {
+  TaskChangeStatusRequest
+} from "../contracts/apptasks/TaskChangeStatusRequest.ts";
+import type {ApiError} from "../models/ApiError.ts";
 
-export const useTasks = (setModalMode: (mode: ModalMode) => void,
-                         isEmpty: (str: string) => boolean) => {
-  const [tasks, setTasks] = useState<TaskModel[]>([
-    {
-      id: "new-guid-1", title: "Marker research", description: "", tags: [
-        {id: 1, name: "Work", taskId: "new-guid-1"},
-        {id: 2, name: "Personal", taskId: "new-guid-1"}
-      ],
-      status: 0
-    },
-    {
-      id: "new-guid-2", title: "Sigma research", description: "", tags: [
-        {id: 1, name: "Work", taskId: "new-guid-2"},
-        {id: 2, name: "Personal", taskId: "new-guid-2"}
-      ],
-      status: 0
-    },
-  ])
+export const useTasks =
+  (setModalMode: (mode: ModalMode) => void,
+   setError: (e: ApiError) => void,
+   isEmpty: (str: string) => boolean) => {
+
+  const taskService = new TasksService();
+
+  const [tasks, setTasks] = useState<TaskModel[]>([])
 
   const [selectedTask, setSelectedTask] =
     useState<TaskModel>(
       {id: "", title: "", description: "", tags: [], status: 0});
+
+  useEffect(() => {
+    taskService.getTasks()
+      .then((result) =>
+        setTasks(result))
+  }, [])
 
   const resetSelectedTask = () => {
     setSelectedTask({
@@ -35,7 +36,6 @@ export const useTasks = (setModalMode: (mode: ModalMode) => void,
     });
   }
 
-
   const onInputChange =
     (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const {name, value} = event.target;
@@ -43,7 +43,7 @@ export const useTasks = (setModalMode: (mode: ModalMode) => void,
     };
 
   const onOpenEditModal = (id?: string) => {
-    const task = tasks.find((note) => note?.id === id);
+    const task = tasks.find((task) => task?.id === id);
     if (task) {
       setSelectedTask(task);
       setModalMode(ModalMode.EDIT_TASK);
@@ -54,20 +54,37 @@ export const useTasks = (setModalMode: (mode: ModalMode) => void,
     e.preventDefault();
     if (isEmpty(selectedTask?.title))
       return;
-    setTasks(prevItems =>
-      prevItems.map(item =>
-        item.id === selectedTask?.id ? selectedTask : item))
+    taskService.updateTask(selectedTask)
+      .then(() =>
+        setTasks(prevItems =>
+          prevItems.map(item =>
+            item.id === selectedTask?.id ? selectedTask : item))
+      )
+      .catch(e => {
+        setError(e)
+      });
   }
 
-  const onOpenCreateModal = () => {
+  const onOpenCreateModal = (status: number) => {
     resetSelectedTask();
+    const updatedTask = { ...selectedTask, status: status };
+    setSelectedTask(updatedTask);
     setModalMode(ModalMode.TASK_CREATE);
   }
 
   const onCreate = (e: FormEvent) => {
     e.preventDefault();
-    setTasks((prev) => [...prev, selectedTask]);
-  }
+    taskService.createTask(selectedTask)
+      .then((result) => {
+        const updatedTask = { ...selectedTask, id: result };
+        setSelectedTask(updatedTask);
+        console.log(updatedTask);
+        setTasks((prev) => [...prev, updatedTask]);
+      })
+      .catch(e => {
+        setError(e)
+      });
+  };
 
   const onDelete = (id?: string) => {
     const task = tasks.find((task) => task?.id === id);
@@ -78,8 +95,14 @@ export const useTasks = (setModalMode: (mode: ModalMode) => void,
   };
 
   const onDeleteConfirm = (id: string) => {
-    setTasks((prev) =>
-      (prev.filter((task) => task.id !== id)));
+    taskService.deleteTask(id)
+      .then(() =>
+        setTasks((prev) =>
+          (prev.filter((task) => task.id !== id)))
+      )
+      .catch(e => {
+        setError(e)
+      });
   }
 
   const onDragStart = (task: TaskModel) => {
@@ -97,14 +120,20 @@ export const useTasks = (setModalMode: (mode: ModalMode) => void,
 
     if (selectedTask.status === newStatus) return;
 
-    const updatedTasks = tasks.map((task) =>
-      task.id === selectedTask.id
-        ? {...task, status: newStatus}
-        : task
-    );
-
-    setTasks(updatedTasks);
-    resetSelectedTask();
+    taskService.changeStatus({appTaskId: selectedTask.id,
+      newStatus} as TaskChangeStatusRequest )
+      .then(() => {
+        const updatedTasks = tasks.map((task) =>
+          task.id === selectedTask.id
+            ? {...task, status: newStatus}
+            : task
+        );
+        setTasks(updatedTasks);
+        resetSelectedTask();
+      })
+      .catch(e => {
+        setError(e)
+      });
   }
 
   return {
