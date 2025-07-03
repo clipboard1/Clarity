@@ -32,6 +32,14 @@ public class UsersController : ControllerBase
         _commandDispatcher = commandDispatcher;
         _options = options.Value;
     }
+
+    [HttpGet("check")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Check()
+    {
+        return Ok();
+    }
     
     [HttpPost("register")]
     [ValidateModel<RegisterUserRequest>]
