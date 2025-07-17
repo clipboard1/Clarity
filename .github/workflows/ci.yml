@@ -2,6 +2,7 @@
 
 env:
   DOTNET_VERSION: '9.0.x'
+  WORKING_DIRECTORY: './backend'
 
 on:
   pull_request:
@@ -22,9 +23,12 @@ jobs:
 
       - name: Restore dependencies
         run: dotnet restore
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Build
         run: dotnet build --no-restore --configuration Release
+        working-directory: ${{ env.WORKING_DIRECTORY }}
 
       - name: Run tests
         run: dotnet test --no-build --verbosity normal
+        working-directory: ${{ env.WORKING_DIRECTORY }}
