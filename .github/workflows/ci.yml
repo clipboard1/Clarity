@@ -11,6 +11,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      ConnectionStrings__ClarityDbContext: ${{ secrets.DB_CONNECTION_STRING }}
+      JwtOptions__SecretKey: ${{ secrets.JWT_SECRET_KEY }}
+      JwtOptions__Issuer: "self"
+      JwtOptions__Audience: "account"
+      JwtOptions__ExpiresMinutes: "30"
+      JwtOptions__AuthCookieName: ".AspNetCore.Application.Id"
+      JwtOptions__RefreshCookieName: ".AspNetCore.Application.Name"
+      FrontendUrl: ${{ secrets.FRONTEND_URL }}
     
     steps:
       - name: Checkout code
