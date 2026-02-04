@@ -1,6 +1,5 @@
 ﻿services:
   clarity.api:
-    image: clarity.api
     environment:
       - ConnectionStrings__ClarityDbContext=${ConnectionStrings__ClarityDbContext}
       - JwtOptions__SecretKey=${JwtOptions__SecretKey}
@@ -28,13 +27,8 @@
       POSTGRES_DB: db
     ports:
       - "5432"
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
       timeout: 5s
       retries: 5
-
-volumes:
-  postgres-data:
