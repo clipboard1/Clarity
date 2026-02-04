@@ -4,8 +4,9 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-      <UserSecretsId>c1451e4a-d2dd-4d87-87dd-1f10d508c0f6</UserSecretsId>
-      <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <UserSecretsId>c1451e4a-d2dd-4d87-87dd-1f10d508c0f6</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <PreserveCompilationContext>true</PreserveCompilationContext>
   </PropertyGroup>
 
     <ItemGroup>
