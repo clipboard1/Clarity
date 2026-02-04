@@ -1,5 +1,5 @@
 ﻿services:
-  clarity.api:
+  clarityapi:
     environment:
       - ConnectionStrings__ClarityDbContext=${ConnectionStrings__ClarityDbContext}
       - JwtOptions__SecretKey=${JwtOptions__SecretKey}
@@ -15,11 +15,11 @@
     ports:
       - "333:8080"
     depends_on:
-      clarity.db:
+      claritydb:
         condition: service_healthy
     
       
-  clarity.db:
+  claritydb:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
@@ -32,3 +32,16 @@
       interval: 5s
       timeout: 5s
       retries: 5
+
+  pgadmin:
+    image: elestio/pgadmin:latest
+    environment:
+        PGADMIN_DEFAULT_EMAIL: admin@example.com
+        PGADMIN_DEFAULT_PASSWORD: admin
+        PGADMIN_LISTEN_PORT: 8082
+    ports:
+    - "222:8082"
+    depends_on:
+      claritydb:
+        condition: service_healthy
+    
