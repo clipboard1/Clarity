@@ -8,16 +8,16 @@ import type {
 
 export class TasksService extends RequestService {
   constructor() {
-    super(import.meta.env.VITE_API_URL + "apptasks");
+    super();
   }
 
   public async getTasks(): Promise<Array<TaskModel>> {
-      return await this.handleFetch<Array<TaskModel>>(this.host);
+      return await this.handleFetch<Array<TaskModel>>("apptasks");
   }
 
   public async createTask(createRequest: TaskCreateRequest): Promise<string> {
     return this.handleFetch<string>(
-      this.host, 'POST',
+     "apptasks", 'POST',
       true,
       this.defaultHeaders,
       JSON.stringify(createRequest))
@@ -25,7 +25,7 @@ export class TasksService extends RequestService {
 
   public async updateTask(updateRequest: TaskUpdateRequest): Promise<null> {
     return this.handleFetch(
-      this.host, 'PATCH',
+     "apptasks", 'PATCH',
       false,
       this.defaultHeaders,
       JSON.stringify(updateRequest))
@@ -33,18 +33,16 @@ export class TasksService extends RequestService {
 
   public async changeStatus(changeStatusRequest: TaskChangeStatusRequest)
   : Promise<TaskChangeStatusRequest> {
-    const url = `${this.host}/change-status`
     return this.handleFetch(
-      url, 'PUT',
+      "apptasks/change-status", 'PUT',
       false,
       this.defaultHeaders,
       JSON.stringify(changeStatusRequest))
   }
 
   public async deleteTask(id: string): Promise<boolean> {
-    const url = `${this.host}/${id}`
     return this.handleFetch<boolean>(
-      url, 'DELETE',
+      `apptasks/${id}`, 'DELETE',
       false,
       this.defaultHeaders)
   }

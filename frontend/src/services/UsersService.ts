@@ -4,13 +4,12 @@ import type {RegisterUserRequest} from "../contracts/users/RegisterUserRequest.t
 
 export class UsersService extends RequestService {
   constructor() {
-    super(import.meta.env.VITE_API_URL + "users");
+    super();
   }
 
   public async check() : Promise<null> {
-    const url = this.host + "/check"
     return this.handleFetch(
-      url, 'GET',
+      "users/check", 'GET',
       false,
       this.defaultHeaders,
     )
@@ -18,9 +17,8 @@ export class UsersService extends RequestService {
 
   public async login(loginRequest: LoginUserRequest)
     : Promise<LoginUserRequest> {
-    const url = this.host + "/login"
     return this.handleFetch<LoginUserRequest>(
-      url, 'POST',
+      "users/login", 'POST',
       true,
       this.defaultHeaders,
       JSON.stringify(loginRequest)
@@ -29,9 +27,8 @@ export class UsersService extends RequestService {
 
   public async register(registerRequest: RegisterUserRequest)
   : Promise<RegisterUserRequest> {
-    const url = this.host + "/register"
     return this.handleFetch<RegisterUserRequest>(
-      url, 'POST',
+      "users/register", 'POST',
       false,
       this.defaultHeaders,
       JSON.stringify(registerRequest)
@@ -40,9 +37,8 @@ export class UsersService extends RequestService {
 
   public async logout()
   : Promise<boolean> {
-    const url = this.host + "/logout"
     return this.handleFetch<boolean>(
-      url, 'POST',
+      "user/logout", 'POST',
       false,
       this.defaultHeaders
     )

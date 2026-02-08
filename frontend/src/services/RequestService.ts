@@ -1,21 +1,37 @@
 import type {ApiError} from "../models/notifications/ApiError.ts";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL ?? "";
+const RAW_API_BASE_URL = import.meta.env.VITE_API_URL;
+
+if (!RAW_API_BASE_URL) {
+  throw new Error(
+      "VITE_API_URL is not defined. Check .env.production or build args."
+  )
+}
+
+const API_BASE_URL = RAW_API_BASE_URL.endsWith("/")
+  ? RAW_API_BASE_URL 
+  : `${RAW_API_BASE_URL}/`;
 
 export class RequestService {
-  protected readonly host: string;
+  protected readonly baseUrl: string;
   protected readonly defaultHeaders: HeadersInit = {
     "Content-Type": "application/json",
   }
 
-  constructor(host: string = API_BASE_URL) {
-    this.host = host;
+  constructor(baseUrl: string = API_BASE_URL) {
+    this.baseUrl = baseUrl;
+  }
+  
+  protected buildUrl(path: string): string {
+    return new URL(path, this.baseUrl).toString();
   }
 
-  async handleFetch<T>(url:string, method: string = 'GET',
+  async handleFetch<T>(path:string, method: string = 'GET',
                        expectJson = true,headers?: HeadersInit,
                        body?: string): Promise<T>
   {
+    const url = this.buildUrl(path);
+    
     try {
       const response = await fetch(url, {
         method,
