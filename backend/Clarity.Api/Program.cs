@@ -22,7 +22,7 @@ builder.Services.AddDbContext<ClarityDbContext>(options =>
     options.UseNpgsql(connectionString);
 });
 
-string? frontendUrl = builder.Configuration["FrontEndUrl"]; 
+string? frontendUrl = builder.Configuration["FrontendUrl"]; 
 const string corsPolicyName = "_myCorsPolicy";
 builder.Services.AddCors(options =>
 {
@@ -88,13 +88,13 @@ app.UseCookiePolicy(new CookiePolicyOptions
 });
 
 app.UseHttpsRedirection();
+app.UseCors(corsPolicyName);
 app.UseSecureJwt();
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.UseCors(corsPolicyName);
 
 app.MapControllers();
 
