@@ -109,32 +109,36 @@ export const useTasks =
     setSelectedTask(task)
   }
 
-  const onDragOver = (e: DragEvent) => {
-    e.preventDefault();
-  }
+  const onDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  e.preventDefault();
+};
 
-  const onDrop = (e: DragEvent, newStatus: number) => {
-    e.preventDefault();
+const onDrop = (
+  e: React.DragEvent<HTMLDivElement>,
+  newStatus: number
+) => {
+  e.preventDefault();
 
-    if (!selectedTask) return;
+  if (!selectedTask) return;
+  if (selectedTask.status === newStatus) return;
 
-    if (selectedTask.status === newStatus) return;
-
-    taskService.changeStatus({appTaskId: selectedTask.id,
-      newStatus} as TaskChangeStatusRequest )
-      .then(() => {
-        const updatedTasks = tasks.map((task) =>
+  taskService
+    .changeStatus({
+      appTaskId: selectedTask.id,
+      newStatus,
+    } as TaskChangeStatusRequest)
+    .then(() => {
+      setTasks(tasks =>
+        tasks.map(task =>
           task.id === selectedTask.id
-            ? {...task, status: newStatus}
+            ? { ...task, status: newStatus }
             : task
-        );
-        setTasks(updatedTasks);
-        resetSelectedTask();
-      })
-      .catch(e => {
-        setError(e)
-      });
-  }
+        )
+      );
+      resetSelectedTask();
+    })
+    .catch(e => setError(e));
+};
 
   return {
     tasks,

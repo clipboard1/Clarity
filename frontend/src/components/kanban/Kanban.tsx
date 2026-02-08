@@ -133,15 +133,14 @@ const Kanban =
       >
         <Column
           name="ToDo"
-          onDragOver={(e) => onDragOver(e)}
+          onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, 0)}
-          onOpenCreate={() => onTaskOpenCreateModal(0)}
         >
           {getTasksForColumn(0)}
         </Column>
         <Column
           name="In progress"
-          onDragOver={(e) => onDragOver(e)}
+          onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, 1)}
           onOpenCreate={() => onTaskOpenCreateModal(1)}
         >
@@ -149,7 +148,7 @@ const Kanban =
         </Column>
         <Column
           name="Done"
-          onDragOver={(e) => onDragOver(e)}
+          onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, 2)}
           onOpenCreate={() => onTaskOpenCreateModal(2)}
         >
