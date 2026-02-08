@@ -135,6 +135,7 @@ const Kanban =
           name="ToDo"
           onDragOver={onDragOver}
           onDrop={(e) => onDrop(e, 0)}
+          onOpenCreate={() => onTaskOpenCreateModal(0)}
         >
           {getTasksForColumn(0)}
         </Column>
