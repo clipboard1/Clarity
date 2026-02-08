@@ -1,4 +1,11 @@
-﻿services:
+﻿networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+    internal: true
+
+services:
   clarityapi:
     environment:
       - ConnectionStrings__ClarityDbContext=${ConnectionStrings__ClarityDbContext}
@@ -10,23 +17,36 @@
       - JwtOptions__RefreshCookieName=${JwtOptions__RefreshCookieName}
       - FrontendUrl=${FrontendUrl}
     build:
-      context: .
-      dockerfile: Clarity.Api/Dockerfile
+      context: ./backend
+      dockerfile: ./Clarity.Api/Dockerfile
+    networks: 
+    - frontend
+    - backend
     ports:
       - "333:8080"
     depends_on:
       claritydb:
         condition: service_healthy
     
-      
+  clarityfront:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    networks:
+      - frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - clarityapi
+    
   claritydb:
     image: postgres:latest
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: db
-    ports:
-      - "5432"
+    networks:
+      - backend
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -39,9 +59,10 @@
         PGADMIN_DEFAULT_EMAIL: admin@example.com
         PGADMIN_DEFAULT_PASSWORD: admin
         PGADMIN_LISTEN_PORT: 8082
+    networks:
+      - backend
     ports:
     - "222:8082"
     depends_on:
       claritydb:
         condition: service_healthy
-    
