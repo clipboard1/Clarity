@@ -7,8 +7,11 @@ using Clarity.Infrastructure.Authentication;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSerilog();
 
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddSwaggerGen();
@@ -59,7 +62,18 @@ builder.Services.ConfigureOptions<ConfigureSwaggerGenOptions>();
 builder.Services.AddHealthChecks()
     .AddNpgSql(connectionString!);
 
+builder.Host.ConfigureHostOptions(opts =>
+{
+    opts.ShutdownTimeout = TimeSpan.FromSeconds(20);
+});
+
 var app = builder.Build();
+
+var lifetime = app.Services.GetRequiredService<IHostApplicationLifetime>();
+lifetime.ApplicationStopping.Register(() =>
+{
+    
+});
 
 app.MigrateDb();
 

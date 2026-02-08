@@ -19,11 +19,17 @@ services:
     build:
       context: ./backend
       dockerfile: ./Clarity.Api/Dockerfile
+    logging:
+      options:
+        max-size: "10m"
+        max-file: "3"
+    stop_grace_period: 30s
     networks: 
     - frontend
     - backend
     ports:
       - "333:8080"
+    restart: unless-stopped
     depends_on:
       claritydb:
         condition: service_healthy
@@ -36,6 +42,7 @@ services:
       - frontend
     ports:
       - "3000:80"
+    restart: unless-stopped
     depends_on:
       - clarityapi
     
@@ -47,6 +54,7 @@ services:
       POSTGRES_DB: db
     networks:
       - backend
+    restart: unless-stopped
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U postgres" ]
       interval: 5s
@@ -63,6 +71,7 @@ services:
       - backend
     ports:
     - "222:8082"
+    restart: unless-stopped
     depends_on:
       claritydb:
         condition: service_healthy
